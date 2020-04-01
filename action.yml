@@ -1,0 +1,56 @@
+name: "Docker Publish"
+description: "Parses git tag and branch and create convenient docker tags"
+branding:
+  icon: "git-merge"
+  color: "red"
+author: "Sergey Sova"
+runs:
+  using: "node12"
+  main: "main.js"
+inputs:
+  image:
+    description: "The name of the docker image"
+    required: true
+  username:
+    description: "The username for the registry"
+    required: true
+  password:
+    description: "The password or token for the registry"
+    required: true
+  registry:
+    description: "The registry to push an image"
+    required: false
+  dockerfile:
+    description: "Custom dockerfile that should be build"
+    required: false
+  context:
+    description: "Change the Docker build context"
+    required: false
+  workdir:
+    description: "Change directory for building docker image"
+    required: false
+  buildargs:
+    description: "Pass arguments to build-args when building docker image"
+    required: false
+  buildoptions:
+    description: "Configure options for building"
+    required: false
+
+  snapshot:
+    description: "Push date-time-hash tag to registry"
+    required: false
+  tag_extra:
+    description: "Add custom docker tags to push, separated by space"
+    required: false
+  tag_separator:
+    description: "Parses git tag as two parts project name and version"
+    required: false
+  tag_semver:
+    description: "Parses git tag as semver"
+    required: false
+  semver_prerelease:
+    description: "Set parse strategy for prerelease version"
+    required: false
+  semver_higher:
+    description: "Also push docker tags with higher version updates"
+    required: false

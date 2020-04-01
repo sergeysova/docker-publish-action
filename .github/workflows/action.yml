@@ -1,0 +1,19 @@
+name: Action CI
+on: push
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        node: [8.x, 10.x]
+        os: [ubuntu-16.04, windows-2019]
+    runs-on: ${{matrix.os}}
+    actions:
+      - uses: actions/setup-node@master
+        with:
+          version: ${{matrix.node}}
+      - run: |
+          npm install
+      - run: |
+          npm test
+      - uses: actions/custom-action@master
