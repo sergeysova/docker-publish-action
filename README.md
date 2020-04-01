@@ -47,7 +47,7 @@ GitHub's Docker registry uses a different path format. See [Configuring Docker f
 ```yaml
 with:
   image: owner/repository/image
-  username: ${{ secrets.GITHUB_USERNAME }}
+  username: ${{ github.actor }}
   password: ${{ secrets.GITHUB_TOKEN }}
   registry: docker.pkg.github.com
 ```
@@ -138,17 +138,19 @@ Build image also with tag `20200405-124909-5b9727` (date-time-hash)
 ### `tag_extra`
 
 - Available values: any string
-- Default: `"latest"`
+- Default: —
 
 Build an image with another tags. To set multiple use space.
+
+If changes were on master, added tag `latest`
 
 Example:
 
 ```yaml
-tag_extra: latest
+tag_extra: foo
 
 # multiple
-tag_extra: latest dev
+tag_extra: foo bar
 ```
 
 ### `tag_separator`

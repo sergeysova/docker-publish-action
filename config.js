@@ -1,6 +1,6 @@
 const core = require('@actions/core');
 
-module.exports = { readConfig };
+module.exports = { readConfig, assign };
 
 function readConfig() {
   const image = core.getInput('image', { required: true });
@@ -37,6 +37,10 @@ function readConfig() {
     semverHigher,
   };
 
+  return assign(options);
+}
+
+function assign(options) {
   return validate(validators(), options);
 }
 
@@ -45,19 +49,26 @@ function validators() {
     image: string(includes('/')).required(),
     username: string(filled).required(),
     password: string(filled).required(),
-    registry: string().default(undefined),
+    registry: string(removeProtocol).default(undefined),
     dockerfile: string().default('Dockerfile'),
     context: string().default(undefined),
     workdir: string().default(undefined),
     buildArgs: array(),
     buildOptions: string().default(undefined),
     snapshot: boolean().default(false),
-    tagExtra: array().default(['latest']),
+    tagExtra: array().default([]),
     tagSeparator: string().default(undefined),
     tagSemver: options(['skip', 'fail']).default(undefined),
     semverPrerelease: options(['cut', 'short', 'full']).default('cut'),
     semverHigher: boolean().default(false),
   };
+}
+
+function removeProtocol(name, value) {
+  if (/^https:\/\//.test(value)) {
+    return value.replace('https://', '');
+  }
+  return value;
 }
 
 function options(sourceOptions) {
