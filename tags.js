@@ -34,6 +34,10 @@ function createTags(config, { ref, sha }) {
     tags.push(createSnapshot({ sha }));
   }
 
+  if (tags.length === 0) {
+    tags.push(sha);
+  }
+
   return [...new Set(tags)].map((tag) => `${imageName}:${tag}`);
 }
 

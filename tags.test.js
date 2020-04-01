@@ -12,6 +12,7 @@ const _Date = Date;
 beforeAll(() => {
   const DATE_TO_USE = new Date('2017-06-13T04:41:20Z');
 
+  // @ts-ignore
   global.Date = jest.fn(() => DATE_TO_USE);
   global.Date.UTC = _Date.UTC;
   global.Date.parse = _Date.parse;
@@ -22,6 +23,7 @@ afterAll(() => {
   global.Date = _Date;
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('it pushes master to latest', () => {
   expect(
     createTags(
@@ -35,6 +37,7 @@ test('it pushes master to latest', () => {
   `);
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('it pushes branch as name of the branch', () => {
   expect(
     createTags(
@@ -48,6 +51,7 @@ test('it pushes branch as name of the branch', () => {
   `);
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('it converts dashes in branch to hyphens', () => {
   expect(
     createTags(
@@ -61,6 +65,7 @@ test('it converts dashes in branch to hyphens', () => {
   `);
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('it pushes pr as sha', () => {
   expect(
     createTags(config, {
@@ -105,6 +110,7 @@ test('it pushes pr as sha', () => {
   `);
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('it pushes tags to same tags', () => {
   expect(
     createTags(
@@ -118,6 +124,7 @@ test('it pushes tags to same tags', () => {
   `);
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('with tagExtra it pushes also some tags', () => {
   expect(
     createTags(
@@ -133,6 +140,7 @@ test('with tagExtra it pushes also some tags', () => {
   `);
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('with tagExtra it pushes uniq tags', () => {
   expect(
     createTags(
@@ -147,6 +155,7 @@ test('with tagExtra it pushes uniq tags', () => {
   `);
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('with snapshot adds also snapshot tag to branch', () => {
   expect(
     createTags(
@@ -161,6 +170,7 @@ test('with snapshot adds also snapshot tag to branch', () => {
   `);
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('with tagSeparator it pushes tags without project prefix', () => {
   expect(
     createTags(
@@ -174,6 +184,7 @@ test('with tagSeparator it pushes tags without project prefix', () => {
   `);
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('with tagSeparator it pushes tags do not affect snapshot and extra tags', () => {
   expect(
     createTags(
@@ -196,22 +207,32 @@ test('with tagSeparator it pushes tags do not affect snapshot and extra tags', (
   `);
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('with tagSemver: skip it skips non semver tag', () => {
   expect(
     createTags(
       { ...config, image: 'owner/image', tagSemver: 'skip', tagSeparator: '@' },
       { ref: 'refs/tags/hello@version', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
-  ).toMatchInlineSnapshot(`Array []`);
+  ).toMatchInlineSnapshot(`
+    Array [
+      "owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
+    ]
+  `);
 
   expect(
     createTags(
       { ...config, image: 'owner/image', tagSemver: 'skip' },
       { ref: 'refs/tags/version', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
-  ).toMatchInlineSnapshot(`Array []`);
+  ).toMatchInlineSnapshot(`
+    Array [
+      "owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
+    ]
+  `);
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('with tagSemver: fail it fails on non semver tag', () => {
   expect(() =>
     createTags(
@@ -228,6 +249,7 @@ test('with tagSemver: fail it fails on non semver tag', () => {
   ).toThrow(`Tag "version" is not`);
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('with tagSemver: fail it parses semver tag', () => {
   expect(
     createTags(
@@ -252,6 +274,7 @@ test('with tagSemver: fail it parses semver tag', () => {
   `);
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('with semverPrerelease: default it cuts', () => {
   expect(
     createTags(
@@ -279,6 +302,7 @@ test('with semverPrerelease: default it cuts', () => {
   `);
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('with semverPrerelease: short it cuts rest', () => {
   expect(
     createTags(
@@ -312,6 +336,7 @@ test('with semverPrerelease: short it cuts rest', () => {
   `);
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('with semverPrerelease: full it saves prerelease as is', () => {
   expect(
     createTags(
@@ -345,6 +370,7 @@ test('with semverPrerelease: full it saves prerelease as is', () => {
   `);
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('with semverHigher it creates much tags', () => {
   expect(
     createTags(
@@ -408,6 +434,7 @@ test('with semverHigher it creates much tags', () => {
   `);
 });
 
+///////////////////////////////////////////////////////////////////////////////////
 test('with all options set', () => {
   expect(
     createTags(
