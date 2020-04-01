@@ -16,4 +16,4 @@ jobs:
           npm install
       - run: |
           npm test
-      - uses: actions/custom-action@master
+      - uses: sergeysova/docker-publish-action@master
