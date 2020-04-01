@@ -16,6 +16,7 @@ function createBuildQuery(config, { tags }) {
 
   if (config.buildArgs.length > 0) {
     config.buildArgs.forEach((arg) => {
+      // build args can contain secrets, see README `buildargs`
       core.setSecret(arg);
       buildParams.push(`--build-arg ${arg}`);
     });

@@ -22,5 +22,7 @@ async function main() {
   const tags = createTags(config, { ref, sha });
   const dockerName = tags[0];
 
+  const buildQuery = createBuildQuery(config, { tags });
+
   // login to docker
 }
