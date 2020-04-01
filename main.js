@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-const exec = require('@actions/exec');
+const { exec } = require('@actions/exec');
 const github = require('@actions/github');
 
 const { readConfig } = require('./config');
@@ -23,6 +23,8 @@ async function main() {
   const dockerName = tags[0];
 
   const buildQuery = createBuildQuery(config, { tags });
+
+  await exec(buildQuery, [], { cwd });
 
   // login to docker
 }
