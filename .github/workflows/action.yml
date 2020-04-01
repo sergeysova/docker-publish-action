@@ -8,7 +8,7 @@ jobs:
         node: [8.x, 10.x]
         os: [ubuntu-16.04, windows-2019]
     runs-on: ${{matrix.os}}
-    actions:
+    steps:
       - uses: actions/setup-node@master
         with:
           version: ${{matrix.node}}
