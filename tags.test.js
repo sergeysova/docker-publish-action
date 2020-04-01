@@ -61,6 +61,50 @@ test('it converts dashes in branch to hyphens', () => {
   `);
 });
 
+test('it pushes pr as sha', () => {
+  expect(
+    createTags(config, {
+      ref: 'refs/pull/24/merge',
+      sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+    }),
+  ).toMatchInlineSnapshot(`
+    Array [
+      "owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
+    ]
+  `);
+
+  expect(
+    createTags(
+      { ...config, tagExtra: ['pr'] },
+      {
+        ref: 'refs/pull/24/merge',
+        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+      },
+    ),
+  ).toMatchInlineSnapshot(`
+    Array [
+      "owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
+      "owner/image:pr",
+    ]
+  `);
+
+  expect(
+    createTags(
+      { ...config, tagExtra: ['pr'], snapshot: true },
+      {
+        ref: 'refs/pull/24/merge',
+        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+      },
+    ),
+  ).toMatchInlineSnapshot(`
+    Array [
+      "owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
+      "owner/image:pr",
+      "owner/image:20170613-044120-a0f149",
+    ]
+  `);
+});
+
 test('it pushes tags to same tags', () => {
   expect(
     createTags(
@@ -393,6 +437,136 @@ test('with all options set', () => {
       "docker.pkg.github.com/owner/image:1",
       "docker.pkg.github.com/owner/image:dev",
       "docker.pkg.github.com/owner/image:pre",
+      "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
+    ]
+  `);
+
+  expect(
+    createTags(
+      {
+        ...config,
+        image: 'owner/image',
+        registry: 'docker.pkg.github.com',
+        semverHigher: true,
+        semverPrerelease: 'full',
+        snapshot: true,
+        tagExtra: ['dev'],
+        tagSemver: 'skip',
+        tagSeparator: '@',
+      },
+      {
+        ref: 'refs/tags/v1.2.3',
+        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+      },
+    ),
+  ).toMatchInlineSnapshot(`
+    Array [
+      "docker.pkg.github.com/owner/image:1.2.3",
+      "docker.pkg.github.com/owner/image:1.2",
+      "docker.pkg.github.com/owner/image:1",
+      "docker.pkg.github.com/owner/image:dev",
+      "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
+    ]
+  `);
+
+  expect(
+    createTags(
+      {
+        ...config,
+        image: 'owner/image',
+        registry: 'docker.pkg.github.com',
+        semverHigher: true,
+        semverPrerelease: 'full',
+        snapshot: true,
+        tagExtra: ['dev'],
+        tagSemver: 'skip',
+        tagSeparator: '@',
+      },
+      {
+        ref: 'refs/tags/demo',
+        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+      },
+    ),
+  ).toMatchInlineSnapshot(`
+    Array [
+      "docker.pkg.github.com/owner/image:dev",
+      "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
+    ]
+  `);
+
+  expect(
+    createTags(
+      {
+        ...config,
+        image: 'owner/image',
+        registry: 'docker.pkg.github.com',
+        semverHigher: true,
+        semverPrerelease: 'full',
+        snapshot: true,
+        tagExtra: ['dev'],
+        tagSemver: 'skip',
+        tagSeparator: '@',
+      },
+      {
+        ref: 'refs/heads/demo/branch',
+        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+      },
+    ),
+  ).toMatchInlineSnapshot(`
+    Array [
+      "docker.pkg.github.com/owner/image:demo-branch",
+      "docker.pkg.github.com/owner/image:dev",
+      "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
+    ]
+  `);
+
+  expect(
+    createTags(
+      {
+        ...config,
+        image: 'owner/image',
+        registry: 'docker.pkg.github.com',
+        semverHigher: true,
+        semverPrerelease: 'full',
+        snapshot: true,
+        tagExtra: ['dev'],
+        tagSemver: 'skip',
+        tagSeparator: '@',
+      },
+      {
+        ref: 'refs/heads/dev',
+        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+      },
+    ),
+  ).toMatchInlineSnapshot(`
+    Array [
+      "docker.pkg.github.com/owner/image:dev",
+      "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
+    ]
+  `);
+
+  expect(
+    createTags(
+      {
+        ...config,
+        image: 'owner/image',
+        registry: 'docker.pkg.github.com',
+        semverHigher: true,
+        semverPrerelease: 'full',
+        snapshot: true,
+        tagExtra: ['dev'],
+        tagSemver: 'skip',
+        tagSeparator: '@',
+      },
+      {
+        ref: 'refs/pull/24/merge',
+        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+      },
+    ),
+  ).toMatchInlineSnapshot(`
+    Array [
+      "docker.pkg.github.com/owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
+      "docker.pkg.github.com/owner/image:dev",
       "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
     ]
   `);

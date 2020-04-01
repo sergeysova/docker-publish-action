@@ -270,6 +270,7 @@ Also push tags with higher version updates.
 ## ToDo
 
 - [ ] `cache` to build only changed layers for big docker images
+- [ ] `projectAppend` append project from tag with separator to image name
 
 ## Reading
 
