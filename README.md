@@ -40,6 +40,8 @@ with:
 
 ### `registry`
 
+- Default: —
+
 GitHub's Docker registry uses a different path format. See [Configuring Docker for use with GitHub Package Registry](https://help.github.com/en/packages/using-github-packages-with-your-projects-ecosystem/configuring-docker-for-use-with-github-packages#publishing-a-package)
 
 ```yaml
@@ -52,7 +54,7 @@ with:
 
 ### `dockerfile`
 
-- Default: —
+- Default: "Dockerfile"
 
 This might be useful when you hanve multiple Dockerfiles in one repo.
 
@@ -123,7 +125,7 @@ Use `buildoptions` when you want to configure [options](https://docs.docker.com/
     name: myDocker/repository
     username: ${{ secrets.DOCKER_USERNAME }}
     password: ${{ secrets.DOCKER_PASSWORD }}
-    buildoptions: "--compress --force-rm"
+    buildoptions: '--compress --force-rm'
 ```
 
 ### `snapshot`
@@ -159,7 +161,7 @@ Parses git tag as two parts project name and version.
 Example:
 
 ```yaml
-tag_separator: "@"
+tag_separator: '@'
 ```
 
 | Input                 | Parsed                                              |
@@ -266,3 +268,7 @@ Also push tags with higher version updates.
 ## ToDo
 
 - [ ] `cache` to build only changed layers for big docker images
+
+## Reading
+
+- [Actions versioning](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
