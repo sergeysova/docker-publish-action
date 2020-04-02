@@ -4,22 +4,17 @@ on: push
 
 jobs:
   build:
-    strategy:
-      matrix:
-        node: [8.x, 10.x]
-        # os: [ubuntu-16.04, windows-2019]
-        os: [ubuntu-16.04]
-    runs-on: ${{matrix.os}}
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node@master
-        with:
-          version: ${{matrix.node}}
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
       - run: npm install
       - run: npm test
       - uses: sergeysova/docker-publish-action@master
         with:
-          name: sergeysova/docker-publish-action/test
+          image: sergeysova/docker-publish-action/test
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
