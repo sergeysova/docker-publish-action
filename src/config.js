@@ -16,7 +16,6 @@ function readConfig() {
   const tagExtra = core.getInput('tag_extra', { required: false });
   const tagSeparator = core.getInput('tag_separator', { required: false });
   const tagSemver = core.getInput('tag_semver', { required: false });
-  const semverPrerelease = core.getInput('semver_prerelease', { required: false });
   const semverHigher = core.getInput('semver_higher', { required: false });
 
   const options = {
@@ -33,7 +32,6 @@ function readConfig() {
     tagExtra,
     tagSeparator,
     tagSemver,
-    semverPrerelease,
     semverHigher,
   };
 
@@ -59,7 +57,6 @@ function validators() {
     tagExtra: array().default([]),
     tagSeparator: string().default(undefined),
     tagSemver: options(['skip', 'fail']).default(undefined),
-    semverPrerelease: options(['cut', 'short', 'full']).default('cut'),
     semverHigher: boolean().default(false),
   };
 }

@@ -73,39 +73,14 @@ function parseSeparatedTag(config, { ref }) {
 
 function createSemver(config, { tag }) {
   const mode = config.tagSemver;
-  const includePrerelease = config.semverPrerelease !== 'cut';
 
-  if (semver.valid(tag, { includePrerelease })) {
-    const version = semver.parse(tag, { includePrerelease });
-    let semantic;
+  if (semver.valid(tag, { includePrerelease: true })) {
+    const version = semver.parse(tag, { includePrerelease: true });
+    const semantic = version.format();
 
     const tags = [];
 
-    switch (config.semverPrerelease) {
-      case 'short': {
-        const pre = version.prerelease.length > 0 ? `-${version.prerelease[0]}` : '';
-        const string = [version.major, version.minor, version.patch].join('.').concat(pre);
-
-        tags.push(string);
-        semantic = string;
-        break;
-      }
-      case 'full': {
-        const string = version.format();
-
-        tags.push(string);
-        semantic = string;
-        break;
-      }
-      case 'cut':
-      default: {
-        const string = [version.major, version.minor, version.patch].join('.');
-
-        tags.push(string);
-        semantic = string;
-        break;
-      }
-    }
+    tags.push(semantic);
 
     if (config.semverHigher) {
       tags.push(...createHigher(config, { version }));
@@ -124,29 +99,29 @@ function createSemver(config, { tag }) {
 function createHigher(config, { version }) {
   const tags = [];
 
-  if (version.prerelease.length) {
-    switch (config.semverPrerelease) {
-      case 'cut':
-        version.prerelease = [];
-        break;
-      case 'short':
-        version.prerelease = [version.prerelease[0]];
-        break;
-      case 'full':
-      // do nothing, full prerelease is used
+  const isPrerelease = version.prerelease.length !== 0;
+
+  if (isPrerelease) {
+    const prefix = version.prerelease[0];
+    let chunks = [];
+
+    while (version.prerelease.length) {
+      tags.push(version.format());
+      version.prerelease.pop();
     }
-  }
 
-  while (version.prerelease.length) {
-    tags.push(version.format());
-    version.prerelease.pop();
+    tags.push(
+      `${version.major}.${version.minor}.${version.patch}-${prefix}`,
+      `${version.major}.${version.minor}-${prefix}`,
+      `${version.major}-${prefix}`,
+    );
+  } else {
+    tags.push(
+      `${version.major}.${version.minor}.${version.patch}`,
+      `${version.major}.${version.minor}`,
+      `${version.major}`,
+    );
   }
-
-  tags.push(
-    `${version.major}.${version.minor}.${version.patch}`,
-    `${version.major}.${version.minor}`,
-    `${version.major}`,
-  );
 
   return tags;
 }

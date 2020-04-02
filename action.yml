@@ -48,9 +48,6 @@ inputs:
   tag_semver:
     description: 'Parses git tag as semver'
     required: false
-  semver_prerelease:
-    description: 'Set parse strategy for prerelease version'
-    required: false
   semver_higher:
     description: 'Also push docker tags with higher version updates'
     required: false

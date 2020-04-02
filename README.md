@@ -191,49 +191,6 @@ If used with **`tag_separator`** parses version as semver:
 | `demo@v0.1.2`         | `1.2.3`       |
 | `my-name@1.2.3-alpha` | `1.2.3-alpha` |
 
-### `semver_prerelease`
-
-- Requires: `tag_semver`
-- Available values: `"cut"` | `"short"` | `"full"`
-- Default: `"cut"`
-
-Removes prerelease part from version and use only `major.minor.patch` as docker tag.
-
-Example:
-
-- `v1.2.3`
-- `1.2.3`
-- `v1.2.3-something`
-- `1.2.3-beta.0`
-
-This is all is equals docker tag `1.2.3`.
-
-#### `semver_prerelease: short`
-
-Ref: https://semver.org/#spec-item-10
-
-Takes first part of prerelease version (all alphanumeric text before first dot) and appends to docker image tag. If no prerelease version, uses `major.minor.patch`
-
-Example:
-
-| Input               | Version       |
-| ------------------- | ------------- |
-| `v1.2.3-alpha`      | `1.2.3-alpha` |
-| `1.2.3-alpha.1.5.3` | `1.2.3-alpha` |
-| `1.2.3-4.5.6`       | `1.2.3-4`     |
-| `v1.2.3`            | `1.2.3`       |
-
-#### `semver_prerelease: full`
-
-Append full prerelease version to docker tag. If no prerelease version, uses `major.minor.patch`.
-
-| Input               | Version             |
-| ------------------- | ------------------- |
-| `v1.2.3-alpha`      | `1.2.3-alpha`       |
-| `1.2.3-alpha.1.5.3` | `1.2.3-alpha.1.5.3` |
-| `1.2.3-4.5.6`       | `1.2.3-4.5.6`       |
-| `v1.2.3`            | `1.2.3`             |
-
 ### `semver_higher`
 
 - Requires: `tag_semver`
@@ -242,30 +199,12 @@ Append full prerelease version to docker tag. If no prerelease version, uses `ma
 
 Also push tags with higher version updates.
 
-#### with `semver_prerelease: cut` (default)
-
-| Input          | Tags                |
-| -------------- | ------------------- |
-| `v1.2.3`       | `1.2.3`, `1.2`, `1` |
-| `v1.2.3-alpha` | `1.2.3`, `1.2`, `1` |
-| `v1.2.3-4.5.6` | `1.2.3`, `1.2`, `1` |
-
-#### with `semver_prerelease: short`
-
-| Input          | Tags                               |
-| -------------- | ---------------------------------- |
-| `v1.2.3`       | `1.2.3`, `1.2`, `1`                |
-| `v1.2.3-alpha` | `1.2.3-alpha`, `1.2.3`, `1.2`, `1` |
-| `v1.2.3-4.5.6` | `1.2.3-4`, `1.2.3`, `1.2`, `1`     |
-
-#### with `semver_prerelease: full`
-
-| Input                  | Tags |       |         |               |                 |                     |
-| ---------------------- | ---- | ----- | ------- | ------------- | --------------- | ------------------- |
-| `v1.2.3`               | `1`  | `1.2` | `1.2.3` |
-| `v1.2.3-alpha`         | `1`  | `1.2` | `1.2.3` | `1.2.3-alpha` |
-| `v1.2.3-alpha.1-hot.2` | `1`  | `1.2` | `1.2.3` | `1.2.3-alpha` | `1.2.3-alpha.1` | `1.2.3-alpha.1-hot` |
-| `v1.2.3-4.5.6`         | `1`  | `1.2` | `1.2.3` | `1.2.3-4`     | `1.2.3-4.5`     | `1.2.3-4.5.6`       |
+| Input                 | Tags                 |                    |              |            |          |
+| --------------------- | -------------------- | ------------------ | ------------ | ---------- | -------- |
+| `v1.2.3`              | `1.2.3`              | `1.2`              | `1`          |
+| `v1.2.3-alpha`        | `1.2.3-alpha`        | `1.2-alpha`        | `1-alpha`    |
+| `v1.2.3-beta.1-int.2` | `1.2.3-beta.1-int.2` | `1.2.3-beta.1-int` | `1.2.3-beta` | `1.2-beta` | `1-beta` |
+| `v1.2.3-4.5.6`        | `1.2.3-4.5.6`        | `1.2.3-4.5`        | `1.2.3-4`    | `1.2-4`    | `1-4`    |
 
 ## ToDo
 

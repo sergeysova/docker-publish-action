@@ -323,41 +323,7 @@ test('with tagSemver: fail it parses semver tag', () => {
 });
 
 ///////////////////////////////////////////////////////////////////////////////////
-test('with semverPrerelease: default it cuts', () => {
-  expect(
-    createTags(
-      { ...config, image: 'owner/image', tagSemver: 'skip', tagSeparator: '@' },
-      {
-        ref: 'refs/tags/hello@1.2.3-alpha.0-gt.1',
-        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
-      },
-    ),
-  ).toMatchInlineSnapshot(`
-    Object {
-      "tags": Array [
-        "owner/image:1.2.3",
-      ],
-      "version": "1.2.3",
-    }
-  `);
-
-  expect(
-    createTags(
-      { ...config, image: 'owner/image', tagSemver: 'skip' },
-      { ref: 'refs/tags/v1.2.3-alpha.0-gt.1', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
-    ),
-  ).toMatchInlineSnapshot(`
-    Object {
-      "tags": Array [
-        "owner/image:1.2.3",
-      ],
-      "version": "1.2.3",
-    }
-  `);
-});
-
-///////////////////////////////////////////////////////////////////////////////////
-test('with semverPrerelease: short it cuts rest', () => {
+test('it saves prerelease as is', () => {
   expect(
     createTags(
       {
@@ -365,47 +331,6 @@ test('with semverPrerelease: short it cuts rest', () => {
         image: 'owner/image',
         tagSemver: 'skip',
         tagSeparator: '@',
-        semverPrerelease: 'short',
-      },
-      {
-        ref: 'refs/tags/hello@1.2.3-alpha.0-gt.1',
-        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
-      },
-    ),
-  ).toMatchInlineSnapshot(`
-    Object {
-      "tags": Array [
-        "owner/image:1.2.3-alpha",
-      ],
-      "version": "1.2.3-alpha",
-    }
-  `);
-
-  expect(
-    createTags(
-      { ...config, image: 'owner/image', tagSemver: 'skip', semverPrerelease: 'short' },
-      { ref: 'refs/tags/v1.2.3-alpha.0-gt.1', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
-    ),
-  ).toMatchInlineSnapshot(`
-    Object {
-      "tags": Array [
-        "owner/image:1.2.3-alpha",
-      ],
-      "version": "1.2.3-alpha",
-    }
-  `);
-});
-
-///////////////////////////////////////////////////////////////////////////////////
-test('with semverPrerelease: full it saves prerelease as is', () => {
-  expect(
-    createTags(
-      {
-        ...config,
-        image: 'owner/image',
-        tagSemver: 'skip',
-        tagSeparator: '@',
-        semverPrerelease: 'full',
       },
       {
         ref: 'refs/tags/hello@1.2.3-alpha.0-gt.1',
@@ -423,7 +348,7 @@ test('with semverPrerelease: full it saves prerelease as is', () => {
 
   expect(
     createTags(
-      { ...config, image: 'owner/image', tagSemver: 'skip', semverPrerelease: 'full' },
+      { ...config, image: 'owner/image', tagSemver: 'skip' },
       { ref: 'refs/tags/v1.2.3-alpha.0-gt.1', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
@@ -444,52 +369,6 @@ test('with semverHigher it creates much tags', () => {
         ...config,
         image: 'owner/image',
         tagSemver: 'skip',
-        semverPrerelease: 'cut',
-        semverHigher: true,
-      },
-      { ref: 'refs/tags/v1.2.3-alpha.0-gt.1', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
-    ),
-  ).toMatchInlineSnapshot(`
-    Object {
-      "tags": Array [
-        "owner/image:1.2.3",
-        "owner/image:1.2",
-        "owner/image:1",
-      ],
-      "version": "1.2.3",
-    }
-  `);
-
-  expect(
-    createTags(
-      {
-        ...config,
-        image: 'owner/image',
-        tagSemver: 'skip',
-        semverPrerelease: 'short',
-        semverHigher: true,
-      },
-      { ref: 'refs/tags/v1.2.3-alpha.0-gt.1', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
-    ),
-  ).toMatchInlineSnapshot(`
-    Object {
-      "tags": Array [
-        "owner/image:1.2.3-alpha",
-        "owner/image:1.2.3",
-        "owner/image:1.2",
-        "owner/image:1",
-      ],
-      "version": "1.2.3-alpha",
-    }
-  `);
-
-  expect(
-    createTags(
-      {
-        ...config,
-        image: 'owner/image',
-        tagSemver: 'skip',
-        semverPrerelease: 'full',
         semverHigher: true,
       },
       { ref: 'refs/tags/v1.2.3-alpha.0-gt.1', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
@@ -500,9 +379,8 @@ test('with semverHigher it creates much tags', () => {
         "owner/image:1.2.3-alpha.0-gt.1",
         "owner/image:1.2.3-alpha.0-gt",
         "owner/image:1.2.3-alpha",
-        "owner/image:1.2.3",
-        "owner/image:1.2",
-        "owner/image:1",
+        "owner/image:1.2-alpha",
+        "owner/image:1-alpha",
       ],
       "version": "1.2.3-alpha.0-gt.1",
     }
@@ -518,7 +396,6 @@ test('with all options set', () => {
         image: 'owner/image',
         registry: 'docker.pkg.github.com',
         semverHigher: true,
-        semverPrerelease: 'full',
         snapshot: true,
         tagExtra: ['dev', 'pre'],
         tagSemver: 'skip',
@@ -535,9 +412,8 @@ test('with all options set', () => {
         "docker.pkg.github.com/owner/image:1.2.3-alpha.0-gt.1",
         "docker.pkg.github.com/owner/image:1.2.3-alpha.0-gt",
         "docker.pkg.github.com/owner/image:1.2.3-alpha",
-        "docker.pkg.github.com/owner/image:1.2.3",
-        "docker.pkg.github.com/owner/image:1.2",
-        "docker.pkg.github.com/owner/image:1",
+        "docker.pkg.github.com/owner/image:1.2-alpha",
+        "docker.pkg.github.com/owner/image:1-alpha",
         "docker.pkg.github.com/owner/image:dev",
         "docker.pkg.github.com/owner/image:pre",
         "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
@@ -553,7 +429,6 @@ test('with all options set', () => {
         image: 'owner/image',
         registry: 'docker.pkg.github.com',
         semverHigher: true,
-        semverPrerelease: 'full',
         snapshot: true,
         tagExtra: ['dev'],
         tagSemver: 'skip',
@@ -584,7 +459,6 @@ test('with all options set', () => {
         image: 'owner/image',
         registry: 'docker.pkg.github.com',
         semverHigher: true,
-        semverPrerelease: 'full',
         snapshot: true,
         tagExtra: ['dev'],
         tagSemver: 'skip',
@@ -612,7 +486,6 @@ test('with all options set', () => {
         image: 'owner/image',
         registry: 'docker.pkg.github.com',
         semverHigher: true,
-        semverPrerelease: 'full',
         snapshot: true,
         tagExtra: ['dev'],
         tagSemver: 'skip',
@@ -641,7 +514,6 @@ test('with all options set', () => {
         image: 'owner/image',
         registry: 'docker.pkg.github.com',
         semverHigher: true,
-        semverPrerelease: 'full',
         snapshot: true,
         tagExtra: ['dev'],
         tagSemver: 'skip',
@@ -669,7 +541,6 @@ test('with all options set', () => {
         image: 'owner/image',
         registry: 'docker.pkg.github.com',
         semverHigher: true,
-        semverPrerelease: 'full',
         snapshot: true,
         tagExtra: ['dev'],
         tagSemver: 'skip',
@@ -690,4 +561,70 @@ test('with all options set', () => {
       "version": null,
     }
   `);
+});
+
+test('example from readme', () => {
+  expect(
+    createTags(
+      {
+        ...config,
+        tagSemver: 'skip',
+        semverHigher: true,
+      },
+      {
+        ref: 'refs/tags/v1.2.3-alpha',
+        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+      },
+    ),
+  ).toEqual({
+    tags: ['owner/image:1.2.3-alpha', 'owner/image:1.2-alpha', 'owner/image:1-alpha'],
+    version: '1.2.3-alpha',
+  });
+
+  expect(
+    createTags(
+      {
+        ...config,
+        tagSemver: 'skip',
+        semverHigher: true,
+      },
+      {
+        ref: 'refs/tags/v1.2.3-beta.1-int.2',
+        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+      },
+    ),
+  ).toEqual({
+    tags: [
+      'owner/image:1.2.3-beta.1-int.2',
+      'owner/image:1.2.3-beta.1-int',
+      'owner/image:1.2.3-beta',
+      'owner/image:1.2-beta',
+      'owner/image:1-beta',
+    ],
+    version: '1.2.3-beta.1-int.2',
+  });
+
+  expect(
+    createTags(
+      {
+        ...config,
+        tagSemver: 'skip',
+        semverHigher: true,
+      },
+      {
+        ref: 'refs/tags/v1.2.3-beta.1.pre.2',
+        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+      },
+    ),
+  ).toEqual({
+    tags: [
+      'owner/image:1.2.3-beta.1.pre.2',
+      'owner/image:1.2.3-beta.1.pre',
+      'owner/image:1.2.3-beta.1',
+      'owner/image:1.2.3-beta',
+      'owner/image:1.2-beta',
+      'owner/image:1-beta',
+    ],
+    version: '1.2.3-beta.1.pre.2',
+  });
 });
