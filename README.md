@@ -16,7 +16,7 @@ jobs:
       - name: Publish to Registry
         uses: sergeysova/docker-publish-action@master
         with:
-          name: myDocker/repository
+          image: myDocker/repository
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 ```
@@ -73,7 +73,8 @@ with:
 Use `context` when you would like to change the Docker build context.
 
 ```yaml
-image: owner/image
+with:
+  image: owner/image
   username: ${{ secrets.DOCKER_USERNAME }}
   password: ${{ secrets.DOCKER_PASSWORD }}
   context: directory/of/the/context
@@ -86,7 +87,8 @@ image: owner/image
 Use `workdir` when you would like to change the directory for building.
 
 ```yaml
-image: owner/image
+with:
+  image: owner/image
   username: ${{ secrets.DOCKER_USERNAME }}
   password: ${{ secrets.DOCKER_PASSWORD }}
   workdir: project/subdirectory
@@ -106,7 +108,7 @@ All `buildargs` will be masked, so that they don't appear in the logs.
     FOO: ${{ secrets.FOO_CONTENT }}
     BAR: AnotherSecretValue
   with:
-    name: myDocker/repository
+    image: myDocker/repository
     username: ${{ secrets.DOCKER_USERNAME }}
     password: ${{ secrets.DOCKER_PASSWORD }}
     buildargs: FOO BAR
@@ -122,7 +124,7 @@ Use `buildoptions` when you want to configure [options](https://docs.docker.com/
 - name: Publish to Registry
   uses: sergeysova/docker-publish-action@master
   with:
-    name: myDocker/repository
+    image: myDocker/repository
     username: ${{ secrets.DOCKER_USERNAME }}
     password: ${{ secrets.DOCKER_PASSWORD }}
     buildoptions: '--compress --force-rm'
@@ -147,10 +149,11 @@ If changes were on master, added tag `latest`
 Example:
 
 ```yaml
-tag_extra: foo
+with:
+  tag_extra: foo
 
-# multiple
-tag_extra: foo bar
+  # multiple
+  tag_extra: foo bar
 ```
 
 ### `tag_separator`
@@ -163,7 +166,8 @@ Parses git tag as two parts project name and version.
 Example:
 
 ```yaml
-tag_separator: '@'
+with:
+  tag_separator: '@'
 ```
 
 | Input                 | Parsed                                              |
@@ -191,6 +195,13 @@ If used with **`tag_separator`** parses version as semver:
 | `demo@v0.1.2`         | `1.2.3`       |
 | `my-name@1.2.3-alpha` | `1.2.3-alpha` |
 
+Example:
+
+```yaml
+with:
+  tag_semver: skip
+```
+
 ### `semver_higher`
 
 - Requires: `tag_semver`
@@ -206,11 +217,19 @@ Also push tags with higher version updates.
 | `v1.2.3-beta.1-int.2` | `1.2.3-beta.1-int.2` | `1.2.3-beta.1-int` | `1.2.3-beta` | `1.2-beta` | `1-beta` |
 | `v1.2.3-4.5.6`        | `1.2.3-4.5.6`        | `1.2.3-4.5`        | `1.2.3-4`    | `1.2-4`    | `1-4`    |
 
+Example:
+
+```yaml
+with:
+  semver_higher: true
+```
+
 ## ToDo
 
 - [ ] `cache` to build only changed layers for big docker images
 - [ ] `projectAppend` append project from tag with separator to image name
 - [ ] Pass password to `docker login` with `--password-stdin` when applicable
+- [ ] Check that dockerfile, context and workdir is present
 
 ## Reading
 
