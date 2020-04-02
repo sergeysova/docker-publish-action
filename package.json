@@ -1,22 +1,22 @@
 {
-  "name": "semver-release-action",
+  "name": "docker-publish-action",
   "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/main.js",
   "scripts": {
     "test": "jest"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sergeysova/semver-release-action.git"
+    "url": "git+https://github.com/sergeysova/docker-publish-action.git"
   },
   "keywords": [],
   "author": "Sergey Sova <mail@sergeysova.com> (https://sergeysova.com/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sergeysova/semver-release-action/issues"
+    "url": "https://github.com/sergeysova/docker-publish-action/issues"
   },
-  "homepage": "https://github.com/sergeysova/semver-release-action#readme",
+  "homepage": "https://github.com/sergeysova/docker-publish-action#readme",
   "dependencies": {
     "@actions/core": "^1.2.3",
     "@actions/exec": "^1.0.3",

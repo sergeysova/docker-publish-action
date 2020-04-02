@@ -81,7 +81,7 @@ image: owner/image
 
 ### `workdir`
 
-> Default: —
+- Default: —
 
 Use `workdir` when you would like to change the directory for building.
 
