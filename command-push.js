@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 
-module.exports = { createPushCommand };
+module.exports = { createPushCommands };
 
-function createPushCommand(config, { tags }) {
+function createPushCommands(config, { tags }) {
   return tags.map((tag) => `docker push "${tag}"`);
 }

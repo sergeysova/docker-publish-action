@@ -2,7 +2,7 @@ const { createInspectCommand } = require('./command-inspect');
 
 test('it works with one tag', () => {
   expect(createInspectCommand({}, { tags: ['owner/image:version'] })).toMatchInlineSnapshot(
-    `"docker inspect --format='{{index .RepoDigests 0}}' owner/image:version"`,
+    `"docker inspect --format=\\"{{index .RepoDigests 0}}\\" owner/image:version"`,
   );
 });
 
@@ -18,5 +18,7 @@ test('it works with many tags', () => {
         ],
       },
     ),
-  ).toMatchInlineSnapshot(`"docker inspect --format='{{index .RepoDigests 0}}' owner/name:tag"`);
+  ).toMatchInlineSnapshot(
+    `"docker inspect --format=\\"{{index .RepoDigests 0}}\\" owner/name:tag"`,
+  );
 });

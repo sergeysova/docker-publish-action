@@ -7,7 +7,7 @@ const { createTags } = require('./tags');
 const { createBuildCommand } = require('./command-build');
 const { createInspectCommand } = require('./command-inspect');
 const { createLoginCommand } = require('./command-login');
-const { createPushCommand } = require('./command-push');
+const { createPushCommands } = require('./command-push');
 
 main().catch((error) => {
   console.error(error);
@@ -26,12 +26,16 @@ async function main() {
   const login = createLoginCommand(config);
   const buildCommand = createBuildCommand(config, { tags });
   const inspectCommand = createInspectCommand(config, { tags });
-  const pushCommand = createPushCommand(config, { tags });
+  const pushCommands = createPushCommands(config, { tags });
 
   await exec(login, [], { cwd });
   await exec(buildCommand, [], { cwd });
+
+  for (const command of pushCommands) {
+    await exec(command, [], { cwd });
+  }
+
   const digest = await execOutput(inspectCommand, [], { cwd });
-  await exec(pushCommand, [], { cwd });
 
   core.setOutput('digest', digest.trim());
   core.setOutput('tag', tags[0]);

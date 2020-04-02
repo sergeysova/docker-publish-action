@@ -1,7 +1,7 @@
-const { createPushCommand } = require('./command-push');
+const { createPushCommands } = require('./command-push');
 
 test('it works with one tag', () => {
-  expect(createPushCommand({}, { tags: ['owner/name:tag'] })).toMatchInlineSnapshot(`
+  expect(createPushCommands({}, { tags: ['owner/name:tag'] })).toMatchInlineSnapshot(`
     Array [
       "docker push \\"owner/name:tag\\"",
     ]
@@ -10,7 +10,7 @@ test('it works with one tag', () => {
 
 test('it works with many tags', () => {
   expect(
-    createPushCommand(
+    createPushCommands(
       {},
       {
         tags: [
