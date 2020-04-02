@@ -13,8 +13,7 @@ jobs:
       - uses: actions/setup-node@master
         with:
           version: ${{matrix.node}}
-      - run: |
-          npm install
-      - run: |
-          npm test
+      - uses: actions/checkout@v2
+      - run: npm install
+      - run: npm test
       - uses: sergeysova/docker-publish-action@master
