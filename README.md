@@ -271,6 +271,7 @@ Also push tags with higher version updates.
 
 - [ ] `cache` to build only changed layers for big docker images
 - [ ] `projectAppend` append project from tag with separator to image name
+- [ ] Pass password to `docker login` with `--password-stdin` when applicable
 
 ## Reading
 

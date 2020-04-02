@@ -5,6 +5,8 @@ const github = require('@actions/github');
 const { readConfig } = require('./config');
 const { createTags } = require('./tags');
 const { createBuildCommand } = require('./command-build');
+const { createLoginCommand } = require('./command-login');
+const { createPushCommand } = require('./command-push');
 
 main().catch((error) => {
   console.error(error);
@@ -22,8 +24,11 @@ async function main() {
   const tags = createTags(config, { ref, sha });
   const dockerName = tags[0];
 
+  const login = createLoginCommand(config);
   const buildCommand = createBuildCommand(config, { tags });
+  const pushCommand = createPushCommand(config, { tags });
 
+  await exec(login, [], { cwd });
   await exec(buildCommand, [], { cwd });
 
   // login to docker
