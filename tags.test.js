@@ -31,9 +31,12 @@ test('it pushes master to latest', () => {
       { ref: 'refs/heads/master', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:latest",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:latest",
+      ],
+      "version": null,
+    }
   `);
 });
 
@@ -45,9 +48,12 @@ test('it pushes branch as name of the branch', () => {
       { ref: 'refs/heads/myBranch', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:myBranch",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:myBranch",
+      ],
+      "version": null,
+    }
   `);
 });
 
@@ -59,9 +65,12 @@ test('it converts dashes in branch to hyphens', () => {
       { ref: 'refs/heads/myBranch/withDash', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:myBranch-withDash",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:myBranch-withDash",
+      ],
+      "version": null,
+    }
   `);
 });
 
@@ -73,9 +82,12 @@ test('it pushes pr as sha', () => {
       sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
     }),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
+      ],
+      "version": null,
+    }
   `);
 
   expect(
@@ -87,10 +99,13 @@ test('it pushes pr as sha', () => {
       },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
-      "owner/image:pr",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
+        "owner/image:pr",
+      ],
+      "version": null,
+    }
   `);
 
   expect(
@@ -102,11 +117,14 @@ test('it pushes pr as sha', () => {
       },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
-      "owner/image:pr",
-      "owner/image:20170613-044120-a0f149",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
+        "owner/image:pr",
+        "owner/image:20170613-044120-a0f149",
+      ],
+      "version": null,
+    }
   `);
 });
 
@@ -118,9 +136,12 @@ test('it pushes tags to same tags', () => {
       { ref: 'refs/tags/myRelease', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:myRelease",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:myRelease",
+      ],
+      "version": null,
+    }
   `);
 });
 
@@ -132,11 +153,14 @@ test('with tagExtra it pushes also some tags', () => {
       { ref: 'refs/tags/myRelease', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:myRelease",
-      "owner/image:foo",
-      "owner/image:bar",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:myRelease",
+        "owner/image:foo",
+        "owner/image:bar",
+      ],
+      "version": null,
+    }
   `);
 });
 
@@ -148,10 +172,13 @@ test('with tagExtra it pushes uniq tags', () => {
       { ref: 'refs/tags/hello', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:hello",
-      "owner/image:bye",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:hello",
+        "owner/image:bye",
+      ],
+      "version": null,
+    }
   `);
 });
 
@@ -163,10 +190,13 @@ test('with snapshot adds also snapshot tag to branch', () => {
       { ref: 'refs/heads/master', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:latest",
-      "owner/image:20170613-044120-a0f149",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:latest",
+        "owner/image:20170613-044120-a0f149",
+      ],
+      "version": null,
+    }
   `);
 });
 
@@ -178,9 +208,12 @@ test('with tagSeparator it pushes tags without project prefix', () => {
       { ref: 'refs/tags/hello@version', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:version",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:version",
+      ],
+      "version": null,
+    }
   `);
 });
 
@@ -198,12 +231,15 @@ test('with tagSeparator it pushes tags do not affect snapshot and extra tags', (
       { ref: 'refs/tags/hello@version', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:version",
-      "owner/image:hello",
-      "owner/image:bar",
-      "owner/image:20170613-044120-a0f149",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:version",
+        "owner/image:hello",
+        "owner/image:bar",
+        "owner/image:20170613-044120-a0f149",
+      ],
+      "version": null,
+    }
   `);
 });
 
@@ -215,9 +251,12 @@ test('with tagSemver: skip it skips non semver tag', () => {
       { ref: 'refs/tags/hello@version', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
+      ],
+      "version": null,
+    }
   `);
 
   expect(
@@ -226,9 +265,12 @@ test('with tagSemver: skip it skips non semver tag', () => {
       { ref: 'refs/tags/version', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
+      ],
+      "version": null,
+    }
   `);
 });
 
@@ -257,9 +299,12 @@ test('with tagSemver: fail it parses semver tag', () => {
       { ref: 'refs/tags/hello@1.2.3', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:1.2.3",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:1.2.3",
+      ],
+      "version": "1.2.3",
+    }
   `);
 
   expect(
@@ -268,9 +313,12 @@ test('with tagSemver: fail it parses semver tag', () => {
       { ref: 'refs/tags/v1.2.3', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:1.2.3",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:1.2.3",
+      ],
+      "version": "1.2.3",
+    }
   `);
 });
 
@@ -285,9 +333,12 @@ test('with semverPrerelease: default it cuts', () => {
       },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:1.2.3",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:1.2.3",
+      ],
+      "version": "1.2.3",
+    }
   `);
 
   expect(
@@ -296,9 +347,12 @@ test('with semverPrerelease: default it cuts', () => {
       { ref: 'refs/tags/v1.2.3-alpha.0-gt.1', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:1.2.3",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:1.2.3",
+      ],
+      "version": "1.2.3",
+    }
   `);
 });
 
@@ -319,9 +373,12 @@ test('with semverPrerelease: short it cuts rest', () => {
       },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:1.2.3-alpha",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:1.2.3-alpha",
+      ],
+      "version": "1.2.3-alpha",
+    }
   `);
 
   expect(
@@ -330,9 +387,12 @@ test('with semverPrerelease: short it cuts rest', () => {
       { ref: 'refs/tags/v1.2.3-alpha.0-gt.1', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:1.2.3-alpha",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:1.2.3-alpha",
+      ],
+      "version": "1.2.3-alpha",
+    }
   `);
 });
 
@@ -353,9 +413,12 @@ test('with semverPrerelease: full it saves prerelease as is', () => {
       },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:1.2.3-alpha.0-gt.1",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:1.2.3-alpha.0-gt.1",
+      ],
+      "version": "1.2.3-alpha.0-gt.1",
+    }
   `);
 
   expect(
@@ -364,9 +427,12 @@ test('with semverPrerelease: full it saves prerelease as is', () => {
       { ref: 'refs/tags/v1.2.3-alpha.0-gt.1', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:1.2.3-alpha.0-gt.1",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:1.2.3-alpha.0-gt.1",
+      ],
+      "version": "1.2.3-alpha.0-gt.1",
+    }
   `);
 });
 
@@ -384,11 +450,14 @@ test('with semverHigher it creates much tags', () => {
       { ref: 'refs/tags/v1.2.3-alpha.0-gt.1', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:1.2.3",
-      "owner/image:1.2",
-      "owner/image:1",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:1.2.3",
+        "owner/image:1.2",
+        "owner/image:1",
+      ],
+      "version": "1.2.3",
+    }
   `);
 
   expect(
@@ -403,12 +472,15 @@ test('with semverHigher it creates much tags', () => {
       { ref: 'refs/tags/v1.2.3-alpha.0-gt.1', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:1.2.3-alpha",
-      "owner/image:1.2.3",
-      "owner/image:1.2",
-      "owner/image:1",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:1.2.3-alpha",
+        "owner/image:1.2.3",
+        "owner/image:1.2",
+        "owner/image:1",
+      ],
+      "version": "1.2.3-alpha",
+    }
   `);
 
   expect(
@@ -423,14 +495,17 @@ test('with semverHigher it creates much tags', () => {
       { ref: 'refs/tags/v1.2.3-alpha.0-gt.1', sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3' },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "owner/image:1.2.3-alpha.0-gt.1",
-      "owner/image:1.2.3-alpha.0-gt",
-      "owner/image:1.2.3-alpha",
-      "owner/image:1.2.3",
-      "owner/image:1.2",
-      "owner/image:1",
-    ]
+    Object {
+      "tags": Array [
+        "owner/image:1.2.3-alpha.0-gt.1",
+        "owner/image:1.2.3-alpha.0-gt",
+        "owner/image:1.2.3-alpha",
+        "owner/image:1.2.3",
+        "owner/image:1.2",
+        "owner/image:1",
+      ],
+      "version": "1.2.3-alpha.0-gt.1",
+    }
   `);
 });
 
@@ -455,17 +530,20 @@ test('with all options set', () => {
       },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "docker.pkg.github.com/owner/image:1.2.3-alpha.0-gt.1",
-      "docker.pkg.github.com/owner/image:1.2.3-alpha.0-gt",
-      "docker.pkg.github.com/owner/image:1.2.3-alpha",
-      "docker.pkg.github.com/owner/image:1.2.3",
-      "docker.pkg.github.com/owner/image:1.2",
-      "docker.pkg.github.com/owner/image:1",
-      "docker.pkg.github.com/owner/image:dev",
-      "docker.pkg.github.com/owner/image:pre",
-      "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
-    ]
+    Object {
+      "tags": Array [
+        "docker.pkg.github.com/owner/image:1.2.3-alpha.0-gt.1",
+        "docker.pkg.github.com/owner/image:1.2.3-alpha.0-gt",
+        "docker.pkg.github.com/owner/image:1.2.3-alpha",
+        "docker.pkg.github.com/owner/image:1.2.3",
+        "docker.pkg.github.com/owner/image:1.2",
+        "docker.pkg.github.com/owner/image:1",
+        "docker.pkg.github.com/owner/image:dev",
+        "docker.pkg.github.com/owner/image:pre",
+        "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
+      ],
+      "version": "1.2.3-alpha.0-gt.1",
+    }
   `);
 
   expect(
@@ -487,13 +565,16 @@ test('with all options set', () => {
       },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "docker.pkg.github.com/owner/image:1.2.3",
-      "docker.pkg.github.com/owner/image:1.2",
-      "docker.pkg.github.com/owner/image:1",
-      "docker.pkg.github.com/owner/image:dev",
-      "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
-    ]
+    Object {
+      "tags": Array [
+        "docker.pkg.github.com/owner/image:1.2.3",
+        "docker.pkg.github.com/owner/image:1.2",
+        "docker.pkg.github.com/owner/image:1",
+        "docker.pkg.github.com/owner/image:dev",
+        "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
+      ],
+      "version": "1.2.3",
+    }
   `);
 
   expect(
@@ -515,10 +596,13 @@ test('with all options set', () => {
       },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "docker.pkg.github.com/owner/image:dev",
-      "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
-    ]
+    Object {
+      "tags": Array [
+        "docker.pkg.github.com/owner/image:dev",
+        "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
+      ],
+      "version": null,
+    }
   `);
 
   expect(
@@ -540,11 +624,14 @@ test('with all options set', () => {
       },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "docker.pkg.github.com/owner/image:demo-branch",
-      "docker.pkg.github.com/owner/image:dev",
-      "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
-    ]
+    Object {
+      "tags": Array [
+        "docker.pkg.github.com/owner/image:demo-branch",
+        "docker.pkg.github.com/owner/image:dev",
+        "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
+      ],
+      "version": null,
+    }
   `);
 
   expect(
@@ -566,10 +653,13 @@ test('with all options set', () => {
       },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "docker.pkg.github.com/owner/image:dev",
-      "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
-    ]
+    Object {
+      "tags": Array [
+        "docker.pkg.github.com/owner/image:dev",
+        "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
+      ],
+      "version": null,
+    }
   `);
 
   expect(
@@ -591,10 +681,13 @@ test('with all options set', () => {
       },
     ),
   ).toMatchInlineSnapshot(`
-    Array [
-      "docker.pkg.github.com/owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
-      "docker.pkg.github.com/owner/image:dev",
-      "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
-    ]
+    Object {
+      "tags": Array [
+        "docker.pkg.github.com/owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3",
+        "docker.pkg.github.com/owner/image:dev",
+        "docker.pkg.github.com/owner/image:20170613-044120-a0f149",
+      ],
+      "version": null,
+    }
   `);
 });

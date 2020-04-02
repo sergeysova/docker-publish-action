@@ -54,3 +54,11 @@ inputs:
   semver_higher:
     description: 'Also push docker tags with higher version updates'
     required: false
+
+outputs:
+  digest:
+    description: 'Is the digest of the image, which was pushed'
+  tag:
+    description: 'Is the first tag, which was pushed'
+  semver:
+    description: 'Is the parsed semantic version, if enabled'

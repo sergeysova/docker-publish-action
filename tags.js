@@ -17,9 +17,9 @@ function createTags(config, { ref, sha }) {
     const [project, tag] = parseSeparatedTag(config, { ref });
 
     if (config.tagSemver) {
-      const { tags, semantic } = createSemver(config, { tag });
+      const { tags: semverTags, semantic } = createSemver(config, { tag });
       version = semantic;
-      tags.push(...tags);
+      tags.push(...semverTags);
     } else {
       tags.push(tag);
     }
@@ -77,29 +77,41 @@ function createSemver(config, { tag }) {
 
   if (semver.valid(tag, { includePrerelease })) {
     const version = semver.parse(tag, { includePrerelease });
+    let semantic;
 
     const tags = [];
 
     switch (config.semverPrerelease) {
-      case 'short':
+      case 'short': {
         const pre = version.prerelease.length > 0 ? `-${version.prerelease[0]}` : '';
         const string = [version.major, version.minor, version.patch].join('.').concat(pre);
+
         tags.push(string);
+        semantic = string;
         break;
-      case 'full':
-        tags.push(version.format());
+      }
+      case 'full': {
+        const string = version.format();
+
+        tags.push(string);
+        semantic = string;
         break;
+      }
       case 'cut':
-      default:
-        tags.push([version.major, version.minor, version.patch].join('.'));
+      default: {
+        const string = [version.major, version.minor, version.patch].join('.');
+
+        tags.push(string);
+        semantic = string;
         break;
+      }
     }
 
     if (config.semverHigher) {
       tags.push(...createHigher(config, { version }));
     }
 
-    return { tags, semantic: version.format() };
+    return { tags, semantic };
   } else if (mode === 'skip') {
     // do nothing
   } else if (mode === 'fail') {

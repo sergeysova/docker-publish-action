@@ -35,7 +35,7 @@ async function main() {
 
   core.setOutput('digest', digest.trim());
   core.setOutput('tag', tags[0]);
-  core.setOutput('version', version);
+  core.setOutput('semver', version);
 }
 
 async function execOutput(cmd, args, options) {
