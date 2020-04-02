@@ -5,8 +5,8 @@ branding:
   color: 'red'
 author: 'Sergey Sova'
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: 'node12'
+  main: 'dist/index.js'
 inputs:
   image:
     description: 'The name of the docker image'

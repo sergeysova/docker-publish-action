@@ -4,7 +4,9 @@
   "description": "",
   "main": "src/main.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "ncc build ./src/main.js",
+    "preversion": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,7 @@
   },
   "devDependencies": {
     "@types/jest": "^25.1.4",
+    "@zeit/ncc": "^0.22.0",
     "jest": "^25.2.4",
     "prettier": "^2.0.2"
   }
