@@ -1,8 +1,8 @@
 const core = require('@actions/core');
 
-module.exports = { createBuildQuery };
+module.exports = { createBuildCommand };
 
-function createBuildQuery(config, { tags }) {
+function createBuildCommand(config, { tags }) {
   const context = config.context || '.';
   const buildParams = [];
 

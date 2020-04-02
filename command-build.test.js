@@ -1,4 +1,4 @@
-const { createBuildQuery } = require('./lib');
+const { createBuildCommand } = require('./command-build');
 const { assign } = require('./config');
 const { createTags } = require('./tags');
 
@@ -30,7 +30,7 @@ test('default config branch master', () => {
     ref: 'refs/heads/master',
     sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
   });
-  expect(createBuildQuery(config, { tags })).toMatchInlineSnapshot(
+  expect(createBuildCommand(config, { tags })).toMatchInlineSnapshot(
     `"docker build -f Dockerfile -t owner/image:latest ."`,
   );
 });
@@ -42,7 +42,7 @@ test('default config branch deep', () => {
     ref: 'refs/heads/branch/inside/deep/wow',
     sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
   });
-  expect(createBuildQuery(config, { tags })).toMatchInlineSnapshot(
+  expect(createBuildCommand(config, { tags })).toMatchInlineSnapshot(
     `"docker build -f Dockerfile -t owner/image:branch-inside-deep-wow ."`,
   );
 });
@@ -54,7 +54,7 @@ test('default config tag semver', () => {
     ref: 'refs/tags/v1.2.3',
     sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
   });
-  expect(createBuildQuery(config, { tags })).toMatchInlineSnapshot(
+  expect(createBuildCommand(config, { tags })).toMatchInlineSnapshot(
     `"docker build -f Dockerfile -t owner/image:v1.2.3 ."`,
   );
 });
@@ -66,7 +66,7 @@ test('default config tag nonsemver', () => {
     ref: 'refs/tags/hello',
     sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
   });
-  expect(createBuildQuery(config, { tags })).toMatchInlineSnapshot(
+  expect(createBuildCommand(config, { tags })).toMatchInlineSnapshot(
     `"docker build -f Dockerfile -t owner/image:hello ."`,
   );
 });
@@ -78,7 +78,7 @@ test('default config tag semver with separator', () => {
     ref: 'refs/tags/project@hello',
     sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
   });
-  expect(createBuildQuery(config, { tags })).toMatchInlineSnapshot(
+  expect(createBuildCommand(config, { tags })).toMatchInlineSnapshot(
     `"docker build -f Dockerfile -t owner/image:project@hello ."`,
   );
 });
@@ -88,7 +88,7 @@ test('registry option', () => {
   const config = { ...defaults, registry: 'docker.pkg.github.com' };
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/master',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -99,7 +99,7 @@ test('registry option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/deep/branch',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -110,7 +110,7 @@ test('registry option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/hello',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -121,7 +121,7 @@ test('registry option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/v1.2.3',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -132,7 +132,7 @@ test('registry option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/pull/24/merge',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -148,7 +148,7 @@ test('dockerfile option', () => {
   const config = { ...defaults, registry: 'docker.pkg.github.com', dockerfile: 'my.Dockerfile' };
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/master',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -159,7 +159,7 @@ test('dockerfile option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/deep/branch',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -170,7 +170,7 @@ test('dockerfile option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/hello',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -181,7 +181,7 @@ test('dockerfile option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/v1.2.3',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -192,7 +192,7 @@ test('dockerfile option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/pull/24/merge',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -213,7 +213,7 @@ test('context option', () => {
   };
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/master',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -224,7 +224,7 @@ test('context option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/deep/branch',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -235,7 +235,7 @@ test('context option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/hello',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -246,7 +246,7 @@ test('context option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/v1.2.3',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -257,7 +257,7 @@ test('context option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/pull/24/merge',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -279,7 +279,7 @@ test('buildargs option', () => {
   };
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/master',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -290,7 +290,7 @@ test('buildargs option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/deep/branch',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -301,7 +301,7 @@ test('buildargs option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/hello',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -312,7 +312,7 @@ test('buildargs option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/v1.2.3',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -323,7 +323,7 @@ test('buildargs option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/pull/24/merge',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -346,7 +346,7 @@ test('buildoptions option', () => {
   };
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/master',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -357,7 +357,7 @@ test('buildoptions option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/deep/branch',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -368,7 +368,7 @@ test('buildoptions option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/hello',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -379,7 +379,7 @@ test('buildoptions option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/v1.2.3',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -390,7 +390,7 @@ test('buildoptions option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/pull/24/merge',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -414,7 +414,7 @@ test('snapshot option', () => {
   };
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/master',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -425,7 +425,7 @@ test('snapshot option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/deep/branch',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -436,7 +436,7 @@ test('snapshot option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/hello',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -447,7 +447,7 @@ test('snapshot option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/v1.2.3',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -458,7 +458,7 @@ test('snapshot option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/pull/24/merge',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -481,7 +481,7 @@ test('snapshot option without registry', () => {
   };
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/master',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -492,7 +492,7 @@ test('snapshot option without registry', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/deep/branch',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -503,7 +503,7 @@ test('snapshot option without registry', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/hello',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -514,7 +514,7 @@ test('snapshot option without registry', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/v1.2.3',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -525,7 +525,7 @@ test('snapshot option without registry', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/pull/24/merge',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -544,7 +544,7 @@ test('just snapshot option', () => {
   };
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/master',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -555,7 +555,7 @@ test('just snapshot option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/deep/branch',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -566,7 +566,7 @@ test('just snapshot option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/hello',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -577,7 +577,7 @@ test('just snapshot option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/v1.2.3',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -588,7 +588,7 @@ test('just snapshot option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/pull/24/merge',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -608,7 +608,7 @@ test('snapshot and tagExtra option', () => {
   };
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/master',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -619,7 +619,7 @@ test('snapshot and tagExtra option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/deep/branch',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -630,7 +630,7 @@ test('snapshot and tagExtra option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/hello',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -641,7 +641,7 @@ test('snapshot and tagExtra option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/v1.2.3',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -652,7 +652,7 @@ test('snapshot and tagExtra option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/pull/24/merge',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -673,7 +673,7 @@ test('snapshot and tagExtra with registry option', () => {
   };
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/master',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -684,7 +684,7 @@ test('snapshot and tagExtra with registry option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/deep/branch',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -695,7 +695,7 @@ test('snapshot and tagExtra with registry option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/hello',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -706,7 +706,7 @@ test('snapshot and tagExtra with registry option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/v1.2.3',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -717,7 +717,7 @@ test('snapshot and tagExtra with registry option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/pull/24/merge',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -738,7 +738,7 @@ test('tagSeparator option', () => {
   };
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/v1.2.3',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -749,7 +749,7 @@ test('tagSeparator option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/hello',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -760,7 +760,7 @@ test('tagSeparator option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/project@hello',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -771,7 +771,7 @@ test('tagSeparator option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/project@v1.2.3',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -782,7 +782,7 @@ test('tagSeparator option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/pull/24/merge',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -804,7 +804,7 @@ test('tagSeparator and tagSemver option', () => {
   };
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/master',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -815,7 +815,7 @@ test('tagSeparator and tagSemver option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/project@v1.2.3',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -826,7 +826,7 @@ test('tagSeparator and tagSemver option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/hello',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -837,7 +837,7 @@ test('tagSeparator and tagSemver option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/v1.2.3',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -848,7 +848,7 @@ test('tagSeparator and tagSemver option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/hello@v1.2.3',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -868,7 +868,7 @@ test('tagSemver and semverHigher option', () => {
   };
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/master',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -877,7 +877,7 @@ test('tagSemver and semverHigher option', () => {
   ).toMatchInlineSnapshot(`"docker build -f Dockerfile -t owner/image:latest ."`);
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/deep/branch',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -886,7 +886,7 @@ test('tagSemver and semverHigher option', () => {
   ).toMatchInlineSnapshot(`"docker build -f Dockerfile -t owner/image:deep-branch ."`);
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/hello',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -897,7 +897,7 @@ test('tagSemver and semverHigher option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/v1.2.3',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -908,7 +908,7 @@ test('tagSemver and semverHigher option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/pull/24/merge',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -929,7 +929,7 @@ test('tagSemver and semverHigher with semverPrerelease full option', () => {
   };
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/master',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -938,7 +938,7 @@ test('tagSemver and semverHigher with semverPrerelease full option', () => {
   ).toMatchInlineSnapshot(`"docker build -f Dockerfile -t owner/image:latest ."`);
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/heads/deep/branch',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -947,7 +947,7 @@ test('tagSemver and semverHigher with semverPrerelease full option', () => {
   ).toMatchInlineSnapshot(`"docker build -f Dockerfile -t owner/image:deep-branch ."`);
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/hello',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -958,7 +958,7 @@ test('tagSemver and semverHigher with semverPrerelease full option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/tags/v1.2.3',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
@@ -969,7 +969,7 @@ test('tagSemver and semverHigher with semverPrerelease full option', () => {
   );
 
   expect(
-    createBuildQuery(config, {
+    createBuildCommand(config, {
       tags: createTags(config, {
         ref: 'refs/pull/24/merge',
         sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
