@@ -2,8 +2,9 @@ FROM node:12
 LABEL "repository"="https://github.com/sergeysova/docker-publish-action"
 LABEL "maintainer"="Sergey Sova"
 
-COPY package.json package-lock.json ./
+ADD package.json package-lock.json /action/
+ADD entrypoint.sh /action/entrypoint.sh
 RUN npm i --production
-COPY ./src ./src
+ADD ./src /action/src
 
-ENTRYPOINT node src/main.js
+ENTRYPOINT ["/action/entrypoint.sh"]
