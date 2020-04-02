@@ -5,6 +5,7 @@ const github = require('@actions/github');
 const { readConfig } = require('./config');
 const { createTags } = require('./tags');
 const { createBuildCommand } = require('./command-build');
+const { createInspectCommand } = require('./command-inspect');
 const { createLoginCommand } = require('./command-login');
 const { createPushCommand } = require('./command-push');
 
@@ -19,17 +20,34 @@ async function main() {
   const sha = process.env.GITHUB_SHA;
 
   const cwd = config.workdir;
-  const context = config.context || '.';
 
-  const tags = createTags(config, { ref, sha });
-  const dockerName = tags[0];
+  const { tags, version } = createTags(config, { ref, sha });
 
   const login = createLoginCommand(config);
   const buildCommand = createBuildCommand(config, { tags });
+  const inspectCommand = createInspectCommand(config, { tags });
   const pushCommand = createPushCommand(config, { tags });
 
   await exec(login, [], { cwd });
   await exec(buildCommand, [], { cwd });
+  const digest = await execOutput(inspectCommand, [], { cwd });
+  await exec(pushCommand, [], { cwd });
 
-  // login to docker
+  core.setOutput('digest', digest.trim());
+  core.setOutput('tag', tags[0]);
+  core.setOutput('version', version);
+}
+
+async function execOutput(cmd, args, options) {
+  let output = '';
+  const listeners = {
+    stdout: (data) => {
+      output += data.toString();
+    },
+  };
+  await exec(cmd, args, {
+    ...options,
+    listeners,
+  });
+  return output;
 }

@@ -7,6 +7,7 @@ module.exports = {
 function createTags(config, { ref, sha }) {
   const imageName = createFullName(config.image, config.registry);
   const tags = [];
+  let version = null;
 
   const branch = parseBranch(ref);
 
@@ -16,7 +17,9 @@ function createTags(config, { ref, sha }) {
     const [project, tag] = parseSeparatedTag(config, { ref });
 
     if (config.tagSemver) {
-      tags.push(...createSemver(config, { tag }));
+      const { tags, semantic } = createSemver(config, { tag });
+      version = semantic;
+      tags.push(...tags);
     } else {
       tags.push(tag);
     }
@@ -38,7 +41,7 @@ function createTags(config, { ref, sha }) {
     tags.push(sha);
   }
 
-  return [...new Set(tags)].map((tag) => `${imageName}:${tag}`);
+  return { tags: [...new Set(tags)].map((tag) => `${imageName}:${tag}`), version };
 }
 
 function createSnapshot({ sha }) {
@@ -96,14 +99,14 @@ function createSemver(config, { tag }) {
       tags.push(...createHigher(config, { version }));
     }
 
-    return tags;
+    return { tags, semantic: version.format() };
   } else if (mode === 'skip') {
     // do nothing
   } else if (mode === 'fail') {
     throw new TypeError(`Tag "${tag}" is not a semver`);
   }
 
-  return [];
+  return { tags: [], semantic: null };
 }
 
 function createHigher(config, { version }) {
