@@ -1,4 +1,4 @@
-name: 'Docker Publish'
+name: 'Docker Semver Publish'
 description: 'Parses git tag and branch and create convenient docker tags'
 branding:
   icon: 'git-merge'
