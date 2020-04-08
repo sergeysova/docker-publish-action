@@ -269,13 +269,13 @@ test('context option', () => {
 });
 
 ///////////////////////////////////////////////////////////////////////////////////
-test('buildargs option', () => {
+test('buildArgs option', () => {
   const config = {
     ...defaults,
     registry: 'docker.pkg.github.com',
     dockerfile: 'my.Dockerfile',
     context: 'context/dir',
-    buildargs: ['FOO', 'BAR'],
+    buildArgs: ['FOO', 'BAR'],
   };
 
   expect(
@@ -286,7 +286,7 @@ test('buildargs option', () => {
       }).tags,
     }),
   ).toMatchInlineSnapshot(
-    `"docker build -f my.Dockerfile -t docker.pkg.github.com/owner/image:latest context/dir"`,
+    `"docker build -f my.Dockerfile --build-arg FOO --build-arg BAR -t docker.pkg.github.com/owner/image:latest context/dir"`,
   );
 
   expect(
@@ -297,7 +297,7 @@ test('buildargs option', () => {
       }).tags,
     }),
   ).toMatchInlineSnapshot(
-    `"docker build -f my.Dockerfile -t docker.pkg.github.com/owner/image:deep-branch context/dir"`,
+    `"docker build -f my.Dockerfile --build-arg FOO --build-arg BAR -t docker.pkg.github.com/owner/image:deep-branch context/dir"`,
   );
 
   expect(
@@ -308,7 +308,7 @@ test('buildargs option', () => {
       }).tags,
     }),
   ).toMatchInlineSnapshot(
-    `"docker build -f my.Dockerfile -t docker.pkg.github.com/owner/image:hello context/dir"`,
+    `"docker build -f my.Dockerfile --build-arg FOO --build-arg BAR -t docker.pkg.github.com/owner/image:hello context/dir"`,
   );
 
   expect(
@@ -319,7 +319,7 @@ test('buildargs option', () => {
       }).tags,
     }),
   ).toMatchInlineSnapshot(
-    `"docker build -f my.Dockerfile -t docker.pkg.github.com/owner/image:v1.2.3 context/dir"`,
+    `"docker build -f my.Dockerfile --build-arg FOO --build-arg BAR -t docker.pkg.github.com/owner/image:v1.2.3 context/dir"`,
   );
 
   expect(
@@ -330,7 +330,7 @@ test('buildargs option', () => {
       }).tags,
     }),
   ).toMatchInlineSnapshot(
-    `"docker build -f my.Dockerfile -t docker.pkg.github.com/owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3 context/dir"`,
+    `"docker build -f my.Dockerfile --build-arg FOO --build-arg BAR -t docker.pkg.github.com/owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3 context/dir"`,
   );
 });
 
