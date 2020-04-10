@@ -1291,6 +1291,7 @@ const { createTags } = __webpack_require__(754);
 const { createBuildCommand } = __webpack_require__(88);
 const { createInspectCommand } = __webpack_require__(829);
 const { createLoginCommand } = __webpack_require__(82);
+const { createPullCommand } = __webpack_require__(627);
 const { createPushCommands } = __webpack_require__(554);
 
 main().catch((error) => {
@@ -1308,11 +1309,13 @@ async function main() {
   const { tags, version } = createTags(config, { ref, sha });
 
   const login = createLoginCommand(config);
+  const pullCommand = createPullCommand(config, { tags });
   const buildCommand = createBuildCommand(config, { tags });
   const inspectCommand = createInspectCommand(config, { tags });
   const pushCommands = createPushCommands(config, { tags });
 
   await exec(login, [], { cwd });
+  await exec(pullCommand, [], { cwd });
   await exec(buildCommand, [], { cwd });
 
   for (const command of pushCommands) {
@@ -10737,6 +10740,20 @@ function isPlainObject(o) {
 }
 
 module.exports = isPlainObject;
+
+
+/***/ }),
+
+/***/ 627:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const core = __webpack_require__(470);
+
+module.exports = { createPullCommand };
+
+function createPullCommand(config, { tags }) {
+  return tags.map((tag) => `docker pull "${tag}"`).join(' || ') + ' || true';
+}
 
 
 /***/ }),
