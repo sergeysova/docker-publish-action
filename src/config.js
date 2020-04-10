@@ -12,6 +12,8 @@ function readConfig() {
   const workdir = core.getInput('workdir', { required: false });
   const buildArgs = core.getInput('buildargs', { required: false });
   const buildOptions = core.getInput('buildoptions', { required: false });
+
+  const cache = core.getInput('cache', { required: false });
   const snapshot = core.getInput('snapshot', { required: false });
   const tagExtra = core.getInput('tag_extra', { required: false });
   const tagSeparator = core.getInput('tag_separator', { required: false });
@@ -28,6 +30,8 @@ function readConfig() {
     workdir,
     buildArgs,
     buildOptions,
+
+    cache,
     snapshot,
     tagExtra,
     tagSeparator,
@@ -53,6 +57,8 @@ function validators() {
     workdir: string().default(undefined),
     buildArgs: array(),
     buildOptions: string().default(undefined),
+
+    cache: boolean().default(false),
     snapshot: boolean().default(false),
     tagExtra: array().default([]),
     tagSeparator: string().default(undefined),
