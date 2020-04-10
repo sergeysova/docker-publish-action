@@ -7,7 +7,7 @@ const { createTags } = require('./tags');
 const { createBuildCommand } = require('./command-build');
 const { createInspectCommand } = require('./command-inspect');
 const { createLoginCommand } = require('./command-login');
-const { createPullCommand } = require('./command-pull');
+const { createPullCommands } = require('./command-pull');
 const { createPushCommands } = require('./command-push');
 
 main().catch((error) => {
@@ -25,13 +25,21 @@ async function main() {
   const { tags, version } = createTags(config, { ref, sha });
 
   const login = createLoginCommand(config);
-  const pullCommand = createPullCommand(config, { tags });
+  const pullCommands = createPullCommands(config, { tags });
   const buildCommand = createBuildCommand(config, { tags });
   const inspectCommand = createInspectCommand(config, { tags });
   const pushCommands = createPushCommands(config, { tags });
 
   await exec(login, [], { cwd });
-  await exec(pullCommand, [], { cwd });
+
+  for (const command of pullCommands) {
+    try {
+      await exec(command, [], { cwd });
+    } catch (error) {
+      // tag maybe not created yet
+    }
+  }
+
   await exec(buildCommand, [], { cwd });
 
   for (const command of pushCommands) {

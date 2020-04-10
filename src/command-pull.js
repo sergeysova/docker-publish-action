@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 
-module.exports = { createPullCommand };
+module.exports = { createPullCommands };
 
-function createPullCommand(config, { tags }) {
-  return tags.map((tag) => `docker pull "${tag}"`).join(' || ') + ' || true';
+function createPullCommands(config, { tags }) {
+  return tags.map((tag) => `docker pull "${tag}"`);
 }

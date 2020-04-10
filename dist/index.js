@@ -1291,7 +1291,7 @@ const { createTags } = __webpack_require__(754);
 const { createBuildCommand } = __webpack_require__(88);
 const { createInspectCommand } = __webpack_require__(829);
 const { createLoginCommand } = __webpack_require__(82);
-const { createPullCommand } = __webpack_require__(627);
+const { createPullCommands } = __webpack_require__(627);
 const { createPushCommands } = __webpack_require__(554);
 
 main().catch((error) => {
@@ -1309,13 +1309,21 @@ async function main() {
   const { tags, version } = createTags(config, { ref, sha });
 
   const login = createLoginCommand(config);
-  const pullCommand = createPullCommand(config, { tags });
+  const pullCommands = createPullCommands(config, { tags });
   const buildCommand = createBuildCommand(config, { tags });
   const inspectCommand = createInspectCommand(config, { tags });
   const pushCommands = createPushCommands(config, { tags });
 
   await exec(login, [], { cwd });
-  await exec(pullCommand, [], { cwd });
+
+  for (const command of pullCommands) {
+    try {
+      await exec(command, [], { cwd });
+    } catch (error) {
+      // tag maybe not created yet
+    }
+  }
+
   await exec(buildCommand, [], { cwd });
 
   for (const command of pushCommands) {
@@ -10749,10 +10757,10 @@ module.exports = isPlainObject;
 
 const core = __webpack_require__(470);
 
-module.exports = { createPullCommand };
+module.exports = { createPullCommands };
 
-function createPullCommand(config, { tags }) {
-  return tags.map((tag) => `docker pull "${tag}"`).join(' || ') + ' || true';
+function createPullCommands(config, { tags }) {
+  return tags.map((tag) => `docker pull "${tag}"`);
 }
 
 
