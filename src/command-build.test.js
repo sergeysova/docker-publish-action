@@ -918,3 +918,68 @@ test('tagSemver and semverHigher option', () => {
     `"docker build -f Dockerfile -t owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3 ."`,
   );
 });
+
+///////////////////////////////////////////////////////////////////////////////////
+test('cache option', () => {
+  const config = {
+    ...defaults,
+    tagSemver: 'skip',
+    cache: true,
+    semverHigher: true,
+  };
+
+  expect(
+    createBuildCommand(config, {
+      tags: createTags(config, {
+        ref: 'refs/heads/master',
+        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+      }).tags,
+    }),
+  ).toMatchInlineSnapshot(
+    `"docker build -f Dockerfile --pull --cache-from owner/image:latest -t owner/image:latest ."`,
+  );
+
+  expect(
+    createBuildCommand(config, {
+      tags: createTags(config, {
+        ref: 'refs/heads/deep/branch',
+        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+      }).tags,
+    }),
+  ).toMatchInlineSnapshot(
+    `"docker build -f Dockerfile --pull --cache-from owner/image:deep-branch -t owner/image:deep-branch ."`,
+  );
+
+  expect(
+    createBuildCommand(config, {
+      tags: createTags(config, {
+        ref: 'refs/tags/hello',
+        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+      }).tags,
+    }),
+  ).toMatchInlineSnapshot(
+    `"docker build -f Dockerfile --pull --cache-from owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3 -t owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3 ."`,
+  );
+
+  expect(
+    createBuildCommand(config, {
+      tags: createTags(config, {
+        ref: 'refs/tags/v1.2.3',
+        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+      }).tags,
+    }),
+  ).toMatchInlineSnapshot(
+    `"docker build -f Dockerfile --pull --cache-from owner/image:1.2.3 -t owner/image:1.2.3 -t owner/image:1.2 -t owner/image:1 ."`,
+  );
+
+  expect(
+    createBuildCommand(config, {
+      tags: createTags(config, {
+        ref: 'refs/pull/24/merge',
+        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+      }).tags,
+    }),
+  ).toMatchInlineSnapshot(
+    `"docker build -f Dockerfile --pull --cache-from owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3 -t owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3 ."`,
+  );
+});

@@ -22,6 +22,11 @@ function createBuildCommand(config, { tags }) {
     });
   }
 
+  if (config.cache) {
+    buildParams.push('--pull');
+    buildParams.push(`--cache-from ${tags[0]}`);
+  }
+
   buildParams.push(...tags.map((tag) => `-t ${tag}`));
 
   // latest param

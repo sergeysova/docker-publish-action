@@ -36,6 +36,9 @@ inputs:
     description: 'Configure options for building'
     required: false
 
+  cache:
+    description: 'Enable docker cache'
+    required: false
   snapshot:
     description: 'Push date-time-hash tag to registry'
     required: false

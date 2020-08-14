@@ -7,7 +7,10 @@ const { createTags } = require('./tags');
 const { createBuildCommand } = require('./command-build');
 const { createInspectCommand } = require('./command-inspect');
 const { createLoginCommand } = require('./command-login');
+const { createPullCommands } = require('./command-pull');
 const { createPushCommands } = require('./command-push');
+
+const { getCommands } = require('./commands');
 
 main().catch((error) => {
   console.error(error);
@@ -19,23 +22,15 @@ async function main() {
   const ref = process.env.GITHUB_REF;
   const sha = process.env.GITHUB_SHA;
 
-  const cwd = config.workdir;
+  const commands = getCommands({ ref, sha, config });
 
-  const { tags, version } = createTags(config, { ref, sha });
+  const result = commands.reduce((p, [command, args, options, { safe }], index, list) => {
+    const executor = isLast(index, list) ? execOutput : exec;
+    const promise = p.then(() => executor(command, args, options));
+    return safe ? promise.catch(() => null) : promise;
+  }, Promise.resolve());
 
-  const login = createLoginCommand(config);
-  const buildCommand = createBuildCommand(config, { tags });
-  const inspectCommand = createInspectCommand(config, { tags });
-  const pushCommands = createPushCommands(config, { tags });
-
-  await exec(login, [], { cwd });
-  await exec(buildCommand, [], { cwd });
-
-  for (const command of pushCommands) {
-    await exec(command, [], { cwd });
-  }
-
-  const digest = await execOutput(inspectCommand, [], { cwd });
+  const digest = await result;
 
   core.setOutput('digest', digest.trim());
   core.setOutput('tag', tags[0]);
@@ -54,4 +49,8 @@ async function execOutput(cmd, args, options) {
     listeners,
   });
   return output;
+}
+
+function isLast(index, list) {
+  return list.length - 1 === index;
 }
