@@ -13,6 +13,7 @@ jobs:
       - run: npm install
       - run: npm test
       - uses: sergeysova/docker-publish-action@master
+        id: action
         with:
           image: sergeysova/docker-publish-action/test
           username: ${{ github.actor }}
@@ -21,3 +22,4 @@ jobs:
           tag_semver: 'skip'
           semver_higher: true
           tag_from_label: version
+      - run: echo "${{ steps.action.outputs.digest }} / ${{ steps.action.outputs.tag }} / ${{ steps.action.outputs.semver }}"
