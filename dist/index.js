@@ -970,7 +970,9 @@ async function main() {
 
   const { tags, version } = createTags(config, { ref, sha });
   const commands = getCommands({ tags, config });
-  const digest = await executeCommands(commands);
+  const answer = await executeCommands(commands);
+
+  const [, digest] = answer.split('@sha256:');
 
   core.debug(JSON.stringify(config));
   if (config.tagFromLabel) {
