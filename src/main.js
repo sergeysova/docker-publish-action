@@ -19,7 +19,7 @@ async function main() {
   const commands = getCommands({ tags, config });
   const digest = await executeCommands(commands);
 
-  console.log('DEMO', config);
+  core.debug(config);
   if (config.tagFromLabel) {
     const labelValue = await execOutput(
       `docker image inspect --format="{{.Config.Labels.${config.tagFromLabel}}}" ${digest}`,
