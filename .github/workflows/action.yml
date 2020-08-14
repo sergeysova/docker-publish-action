@@ -20,3 +20,4 @@ jobs:
           registry: docker.pkg.github.com
           tag_semver: 'skip'
           semver_higher: true
+          tag_from_label: version
