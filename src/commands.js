@@ -1,14 +1,11 @@
-const { createTags } = require('./tags');
 const { createBuildCommand } = require('./command-build');
 const { createInspectCommand } = require('./command-inspect');
 const { createLoginCommand } = require('./command-login');
 const { createPullCommands } = require('./command-pull');
 const { createPushCommands } = require('./command-push');
 
-function getCommands({ ref, sha, config }) {
+function getCommands({ config, tags }) {
   const cwd = config.workdir;
-
-  const { tags, version } = createTags(config, { ref, sha });
 
   /**
    * @type Array<[command, arguments, options, { safe: boolean }]>
@@ -32,6 +29,4 @@ function getCommands({ ref, sha, config }) {
   return commands;
 }
 
-module.exports = {
-  getCommands,
-};
+module.exports = { getCommands };

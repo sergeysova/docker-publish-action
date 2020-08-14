@@ -45,6 +45,9 @@ inputs:
   tag_extra:
     description: 'Add custom docker tags to push, separated by space'
     required: false
+  tag_from_label:
+    description: 'Add tag to image from image label'
+    required: false
   tag_separator:
     description: 'Parses git tag as two parts project name and version'
     required: false

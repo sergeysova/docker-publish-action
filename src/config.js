@@ -16,6 +16,7 @@ function readConfig() {
   const cache = core.getInput('cache', { required: false });
   const snapshot = core.getInput('snapshot', { required: false });
   const tagExtra = core.getInput('tag_extra', { required: false });
+  const tagFromLabel = core.getInput('tag_from_label', { required: false });
   const tagSeparator = core.getInput('tag_separator', { required: false });
   const tagSemver = core.getInput('tag_semver', { required: false });
   const semverHigher = core.getInput('semver_higher', { required: false });
@@ -34,6 +35,7 @@ function readConfig() {
     cache,
     snapshot,
     tagExtra,
+    tagFromLabel,
     tagSeparator,
     tagSemver,
     semverHigher,
@@ -61,6 +63,7 @@ function validators() {
     cache: boolean().default(false),
     snapshot: boolean().default(false),
     tagExtra: array().default([]),
+    tagFromLabel: string().default(undefined),
     tagSeparator: string().default(undefined),
     tagSemver: options(['skip', 'fail']).default(undefined),
     semverHigher: boolean().default(false),
