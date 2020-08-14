@@ -121,13 +121,48 @@ All `buildargs` will be masked, so that they don't appear in the logs.
 Use `buildoptions` when you want to configure [options](https://docs.docker.com/engine/reference/commandline/build/#options) for building.
 
 ```yaml
-- name: Publish to Registry
+- name: publish docker image
   uses: sergeysova/docker-publish-action@master
   with:
     image: myDocker/repository
     username: ${{ secrets.DOCKER_USERNAME }}
     password: ${{ secrets.DOCKER_PASSWORD }}
     buildoptions: '--compress --force-rm'
+```
+
+### `cache`
+
+- Available values: `true` | `false`
+- Default: `false`
+
+Use cache when you have big images, that you would only like to build partially (changed layers).
+
+> CAUTION: Docker builds will cache non-repoducable commands, such as installing packages. If you use this option, your packages will never update. To avoid this, run this action on a schedule with caching _disabled_ to rebuild the cache periodically.
+
+Example:
+
+```yaml
+name: Publish to Registry
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '0 2 * * 0' # Weekly on Sundays at 02:00
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: publish docker image
+        uses: sergeysova/docker-publish-action@master
+        with:
+          image: myDocker/repository
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          cache: ${{ github.event_name != 'schedule' }}
 ```
 
 ### `snapshot`
@@ -226,7 +261,7 @@ with:
 
 ## ToDo
 
-- [ ] `cache` to build only changed layers for big docker images
+- [x] `cache` to build only changed layers for big docker images
 - [ ] `projectAppend` append project from tag with separator to image name
 - [ ] Pass password to `docker login` with `--password-stdin` when applicable
 - [ ] Check that dockerfile, context and workdir is present
