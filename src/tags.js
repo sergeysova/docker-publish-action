@@ -2,10 +2,11 @@ const semver = require('semver');
 
 module.exports = {
   createTags,
+  createFullName,
 };
 
 function createTags(config, { ref, sha }) {
-  const imageName = createFullName(config.image, config.registry);
+  const imageName = createFullName(config);
   const tags = [];
   let version = null;
 
@@ -146,6 +147,6 @@ function isPullRequest(ref) {
   return parsePr(ref) !== ref;
 }
 
-function createFullName(image, registry) {
+function createFullName({ image, registry }) {
   return registry && !image.includes(registry) ? `${registry}/${image}` : image;
 }

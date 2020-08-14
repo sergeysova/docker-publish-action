@@ -2,7 +2,7 @@ const core = require('@actions/core');
 const { exec } = require('@actions/exec');
 
 const { readConfig } = require('./config');
-const { createTags } = require('./tags');
+const { createTags, createFullName } = require('./tags');
 const { getCommands } = require('./commands');
 
 main().catch((error) => {
@@ -18,6 +18,19 @@ async function main() {
   const { tags, version } = createTags(config, { ref, sha });
   const commands = getCommands({ tags, config });
   const digest = await executeCommands(commands);
+
+  if (config.tagFromLabel) {
+    const labelValue = await execOutput(
+      `docker image inspect --format="{{.Config.Labels.${config.tagFromLabel}}}" ${digest}`,
+      [],
+      { cwd: config.workdir },
+    );
+    if (labelValue !== '<no value>') {
+      const fullTag = `${createFullName(config)}:${labelValue}`;
+      await exec(`docker tag ${digest} ${fullTag}`);
+      await exec(`docker push ${fullTag}`);
+    }
+  }
 
   core.setOutput('digest', digest.trim());
   core.setOutput('tag', tags[0]);
