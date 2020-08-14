@@ -22,15 +22,17 @@ async function main() {
   const [, digest] = answer.split('@sha256:');
 
   core.debug(JSON.stringify(config));
+  const firstTag = tags[0];
+
   if (config.tagFromLabel) {
     const labelValue = await execOutput(
-      `docker image inspect --format="{{.Config.Labels.${config.tagFromLabel}}}" ${digest}`,
+      `docker image inspect --format="{{.Config.Labels.${config.tagFromLabel}}}" ${firstTag}`,
       [],
       { cwd: config.workdir },
     );
     if (labelValue !== '<no value>') {
       const fullTag = `${createFullName(config)}:${labelValue}`;
-      await exec(`docker tag ${digest} ${fullTag}`);
+      await exec(`docker tag ${firstTag} ${fullTag}`);
       await exec(`docker push ${fullTag}`);
     }
   }
