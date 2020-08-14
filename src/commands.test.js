@@ -1,7 +1,8 @@
 const { getCommands } = require('./commands');
+const { createTags } = require('./tags');
 const { assign } = require('./config');
 
-const config = {
+const common = {
   ...assign({
     image: 'owner/image',
     username: 'username',
@@ -29,10 +30,10 @@ afterAll(() => {
 });
 
 test('registry option', () => {
+  const config = { ...common, registry: 'docker.pkg.github.com' };
   const commands = getCommands({
-    ref,
-    sha,
-    config: { ...config, registry: 'docker.pkg.github.com' },
+    tags: createTags(config, { ref, sha }).tags,
+    config,
   });
   expect(stringify(commands)).toMatchInlineSnapshot(`
     Array [
@@ -48,9 +49,8 @@ test('registry option', () => {
 describe('pr', () => {
   it('pushes as sha', () => {
     const commands = getCommands({
-      ref: 'refs/pull/24/merge',
-      sha,
-      config,
+      tags: createTags(common, { ref: 'refs/pull/24/merge', sha }).tags,
+      config: common,
     });
     expect(stringify(commands)).toMatchInlineSnapshot(`
       Array [
@@ -64,10 +64,10 @@ describe('pr', () => {
   });
 
   it('pushes with tagExtra as two tags', () => {
+    const config = { ...common, tagExtra: ['pr'] };
     const commands = getCommands({
-      ref: 'refs/pull/24/merge',
-      sha,
-      config: { ...config, tagExtra: ['pr'] },
+      tags: createTags(config, { ref: 'refs/pull/24/merge', sha }).tags,
+      config,
     });
     expect(stringify(commands)).toMatchInlineSnapshot(`
       Array [
@@ -83,10 +83,10 @@ describe('pr', () => {
   });
 
   it('pushes with tagExtra and snapshot as three tags', () => {
+    const config = { ...common, tagExtra: ['pr'], snapshot: true };
     const commands = getCommands({
-      ref: 'refs/pull/24/merge',
-      sha,
-      config: { ...config, tagExtra: ['pr'], snapshot: true },
+      tags: createTags(config, { ref: 'refs/pull/24/merge', sha }).tags,
+      config,
     });
     expect(stringify(commands)).toMatchInlineSnapshot(`
       Array [
@@ -106,9 +106,8 @@ describe('pr', () => {
 
 it('pushes tags to same tags', () => {
   const commands = getCommands({
-    ref: 'refs/tags/release-example',
-    sha,
-    config: { ...config },
+    tags: createTags(common, { ref: 'refs/tags/release-example', sha }).tags,
+    config: common,
   });
   expect(stringify(commands)).toMatchInlineSnapshot(`
     Array [
@@ -122,10 +121,10 @@ it('pushes tags to same tags', () => {
 });
 
 it('add cache', () => {
+  const config = { ...common, cache: true };
   const commands = getCommands({
-    ref,
-    sha,
-    config: { ...config, cache: true },
+    tags: createTags(config, { ref, sha }).tags,
+    config,
   });
   expect(stringify(commands)).toMatchInlineSnapshot(`
     Array [
@@ -139,10 +138,10 @@ it('add cache', () => {
 });
 
 it('registry, dockerfile, tagExtra and cache', () => {
+  const config = { ...common, dockerfile: 'builder.Dockerfile', tagExtra: ['1.45.2'], cache: true };
   const commands = getCommands({
-    ref,
-    sha,
-    config: { ...config, dockerfile: 'builder.Dockerfile', tagExtra: ['1.45.2'], cache: true },
+    tags: createTags(config, { ref, sha }).tags,
+    config,
   });
   expect(stringify(commands)).toMatchInlineSnapshot(`
     Array [
