@@ -972,7 +972,7 @@ async function main() {
   const commands = getCommands({ tags, config });
   const digest = await executeCommands(commands);
 
-  core.debug(config);
+  core.debug(JSON.stringify(config));
   if (config.tagFromLabel) {
     const labelValue = await execOutput(
       `docker image inspect --format="{{.Config.Labels.${config.tagFromLabel}}}" ${digest}`,
@@ -3727,58 +3727,6 @@ module.exports = {
   gtr: __webpack_require__(531),
   ltr: __webpack_require__(323),
   intersects: __webpack_require__(259),
-  simplifyRange: __webpack_require__(877),
-}
-
-
-/***/ }),
-
-/***/ 877:
-/***/ (function(module, __unusedexports, __webpack_require__) {
-
-// given a set of versions and a range, create a "simplified" range
-// that includes the same versions that the original range does
-// If the original range is shorter than the simplified one, return that.
-const satisfies = __webpack_require__(310)
-const compare = __webpack_require__(874)
-module.exports = (versions, range, options) => {
-  const set = []
-  let min = null
-  let prev = null
-  const v = versions.sort((a, b) => compare(a, b, options))
-  for (const version of v) {
-    const included = satisfies(version, range, options)
-    if (included) {
-      prev = version
-      if (!min)
-        min = version
-    } else {
-      if (prev) {
-        set.push([min, prev])
-      }
-      prev = null
-      min = null
-    }
-  }
-  if (min)
-    set.push([min, null])
-
-  const ranges = []
-  for (const [min, max] of set) {
-    if (min === max)
-      ranges.push(min)
-    else if (!max && min === v[0])
-      ranges.push('*')
-    else if (!max)
-      ranges.push(`>=${min}`)
-    else if (min === v[0])
-      ranges.push(`<=${max}`)
-    else
-      ranges.push(`${min} - ${max}`)
-  }
-  const simplified = ranges.join(' || ')
-  const original = typeof range.raw === 'string' ? range.raw : String(range)
-  return simplified.length < original.length ? simplified : range
 }
 
 
