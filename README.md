@@ -127,7 +127,7 @@ Use `buildoptions` when you want to configure [options](https://docs.docker.com/
     image: myDocker/repository
     username: ${{ secrets.DOCKER_USERNAME }}
     password: ${{ secrets.DOCKER_PASSWORD }}
-    buildoptions: '--compress --force-rm'
+    buildoptions: "--compress --force-rm"
 ```
 
 ### `cache`
@@ -148,7 +148,7 @@ on:
     branches:
       - master
   schedule:
-    - cron: '0 2 * * 0' # Weekly on Sundays at 02:00
+    - cron: "0 2 * * 0" # Weekly on Sundays at 02:00
 
 jobs:
   update:
@@ -202,7 +202,7 @@ Example:
 
 ```yaml
 with:
-  tag_separator: '@'
+  tag_separator: "@"
 ```
 
 | Input                 | Parsed                                              |
@@ -245,12 +245,12 @@ with:
 
 Also push tags with higher version updates.
 
-| Input                 | Tags                 |                    |              |            |          |
-| --------------------- | -------------------- | ------------------ | ------------ | ---------- | -------- |
-| `v1.2.3`              | `1.2.3`              | `1.2`              | `1`          |
-| `v1.2.3-alpha`        | `1.2.3-alpha`        | `1.2-alpha`        | `1-alpha`    |
-| `v1.2.3-beta.1-int.2` | `1.2.3-beta.1-int.2` | `1.2.3-beta.1-int` | `1.2.3-beta` | `1.2-beta` | `1-beta` |
-| `v1.2.3-4.5.6`        | `1.2.3-4.5.6`        | `1.2.3-4.5`        | `1.2.3-4`    | `1.2-4`    | `1-4`    |
+| Input                 | Tags                                                                             |
+| --------------------- | -------------------------------------------------------------------------------- |
+| `v1.2.3`              | `1.2.3` , `1.2` , `1` ,                                                          |
+| `v1.2.3-alpha`        | `1.2.3-alpha` , `1.2-alpha` , `1-alpha` ,                                        |
+| `v1.2.3-beta.1-int.2` | `1.2.3-beta.1-int.2` , `1.2.3-beta.1-int` , `1.2.3-beta` , `1.2-beta` , `1-beta` |
+| `v1.2.3-4.5.6`        | `1.2.3-4.5.6` , `1.2.3-4.5` , `1.2.3-4` , `1.2-4` , `1-4`                        |
 
 Example:
 
