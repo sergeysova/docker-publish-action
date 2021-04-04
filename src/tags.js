@@ -12,7 +12,7 @@ function createTags(config, { ref, sha }) {
 
   const branch = parseBranch(ref);
 
-  if (branch === 'master') {
+  if (branch === 'master' || branch === 'main') {
     tags.push('latest');
   } else if (isGitTag(ref)) {
     const [project, tag] = parseSeparatedTag(config, { ref });
