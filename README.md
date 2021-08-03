@@ -130,6 +130,22 @@ Use `buildoptions` when you want to configure [options](https://docs.docker.com/
     buildoptions: "--compress --force-rm"
 ```
 
+### `buildkit`
+
+- Default: false
+
+Enable [buildkit](https://docs.docker.com/develop/develop-images/build_enhancements/) to be used when building the image.
+
+```yaml
+- name: publish docker image
+  uses: sergeysova/docker-publish-action@master
+  with:
+    image: myDocker/repository
+    username: ${{ secrets.DOCKER_USERNAME }}
+    password: ${{ secrets.DOCKER_PASSWORD }}
+    buildkit: true
+```
+
 ### `cache`
 
 - Available values: `true` | `false`
