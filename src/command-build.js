@@ -34,5 +34,5 @@ function createBuildCommand(config, { tags }) {
 
   const execParams = buildParams.join(' ');
 
-  return `docker build ${execParams}`;
+  return `${config.enableBuildkit ? 'DOCKER_BUILDKIT=true ' : ''}docker build ${execParams}`;
 }

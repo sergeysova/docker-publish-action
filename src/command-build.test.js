@@ -983,3 +983,38 @@ test('cache option', () => {
     `"docker build -f Dockerfile --pull --cache-from owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3 -t owner/image:a0f1490a20d0211c997b44bc357e1972deab8ae3 ."`,
   );
 });
+
+///////////////////////////////////////////////////////////////////////////////////
+test('buildkit is disabled by default', () => {
+  const config = {...defaults};
+
+  expect(
+    createBuildCommand(config, {
+      tags: createTags(config, {
+        ref: 'refs/heads/master',
+        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+      }).tags,
+    }),
+  ).toMatchInlineSnapshot(
+    `"docker build -f Dockerfile -t owner/image:latest ."`
+  )
+})
+
+///////////////////////////////////////////////////////////////////////////////////
+test('buildkit is enabled if passed to config', () => {
+  const config = {
+    ...defaults,
+    enableBuildkit: true
+  };
+
+  expect(
+    createBuildCommand(config, {
+      tags: createTags(config, {
+        ref: 'refs/heads/master',
+        sha: 'a0f1490a20d0211c997b44bc357e1972deab8ae3',
+      }).tags,
+    }),
+  ).toMatchInlineSnapshot(
+    `"DOCKER_BUILDKIT=true docker build -f Dockerfile -t owner/image:latest ."`
+  )
+})

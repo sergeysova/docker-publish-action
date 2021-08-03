@@ -12,6 +12,7 @@ function readConfig() {
   const workdir = core.getInput('workdir', { required: false });
   const buildArgs = core.getInput('buildargs', { required: false });
   const buildOptions = core.getInput('buildoptions', { required: false });
+  const enableBuildkit = core.getInput('buildkit', { required: false });
 
   const cache = core.getInput('cache', { required: false });
   const snapshot = core.getInput('snapshot', { required: false });
@@ -31,6 +32,7 @@ function readConfig() {
     workdir,
     buildArgs,
     buildOptions,
+    enableBuildkit,
 
     cache,
     snapshot,
@@ -59,6 +61,7 @@ function validators() {
     workdir: string().default(undefined),
     buildArgs: array(),
     buildOptions: string().default(undefined),
+    enableBuildkit: boolean().default(false),
 
     cache: boolean().default(false),
     snapshot: boolean().default(false),
